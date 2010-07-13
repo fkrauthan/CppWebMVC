@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+    <bean id="testController" class="TestController" />
+
+
+    <bean id="applicationContext" class="Application">
+        <property name="threadPoolSize" value="20" />
+    </bean>
+
+    <bean id="urlHandler" class="SimpleUrlMapper">
+        <property name="mappings">
+            <map>
+                <item key="/test">testController</item>
+                <item key="/test2">testController</item>
+                <item key="/test3">testController</item>
+            </map>
+        </property>
+    </bean>
+</beans>

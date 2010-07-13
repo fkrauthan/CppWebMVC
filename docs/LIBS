@@ -1,0 +1,7 @@
+log4cxx
+mongoose
+boost::threadpool
+boost::any
+boost::lexical_cast
+boost::function
+boost::find
