@@ -22,3 +22,7 @@ ReflectionCTor::~ReflectionCTor() {
 std::vector<ReflectionParam*>& ReflectionCTor::getParams() {
 	return mParams;
 }
+
+void* ReflectionCTor::createInstance(const std::vector<boost::any>& params) {
+    return mConstructorMethod(params);
+}

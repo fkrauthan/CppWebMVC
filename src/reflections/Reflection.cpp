@@ -24,11 +24,21 @@ void Reflection::registerClass(ReflectionClass* refClass) {
 	}
 
 	mRegisteredClasses[refClass->getName()] = refClass;
+	mRegisteredClassesByTypeId[refClass->getTypeIdName()] = refClass;
 }
 
 ReflectionClass* Reflection::getClass(const std::string& name) {
 	std::map<std::string, ReflectionClass*>::iterator iter = mRegisteredClasses.find(name);
 	if(iter == mRegisteredClasses.end()) {
+		return NULL;
+	}
+
+	return iter->second;
+}
+
+ReflectionClass* Reflection::getClassByTypeId(const std::string& typeId) {
+	std::map<std::string, ReflectionClass*>::iterator iter = mRegisteredClassesByTypeId.find(typeId);
+	if(iter == mRegisteredClassesByTypeId.end()) {
 		return NULL;
 	}
 

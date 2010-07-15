@@ -20,12 +20,19 @@ class Reflection {
 
 		void registerClass(ReflectionClass* refClass);
 		ReflectionClass* getClass(const std::string& name);
+		template <typename T> ReflectionClass* getClass();
+
+		ReflectionClass* getClassByTypeId(const std::string& typeId);
 
 	public:
 		static Reflection& getInstance();
 
 	private:
 		std::map<std::string, ReflectionClass*> mRegisteredClasses;
+		std::map<std::string, ReflectionClass*> mRegisteredClassesByTypeId;
 };
+
+
+#include "Reflection.h"
 
 #endif /* REFLECTION_H_ */

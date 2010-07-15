@@ -21,7 +21,7 @@ class ReflectionCTor {
 		std::vector<ReflectionParam*>& getParams();
 
 		template<typename T> T* createInstance(const std::vector<boost::any>& params = std::vector<boost::any>());
-
+		void* createInstance(const std::vector<boost::any>& params = std::vector<boost::any>());
 	private:
 		std::vector<ReflectionParam*> mParams;
 

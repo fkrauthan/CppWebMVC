@@ -65,6 +65,7 @@ class ReflectionMacroConverter {
 
 
 #define MAP(a, b) std::map<a,b>
+#define PAIR(a, b) std::pair<a,b>
 //-------------------------------------------------------------------------------------------------
 #define BEGIN_CREATE_CONSTRUCTOR_CALL(className, functionCount) \
 	void* className ## ConstructorCreateFunction ## functionCount(const std::vector<boost::any>& params) { \
@@ -107,6 +108,7 @@ class ReflectionMacroConverter {
 			const std::string sClassName = #className; \
 			std::string tmpFunctionName; \
 			std::vector<std::string> superClasses; \
+			std::vector<ReflectionMember*> membersHolder; \
 			std::vector<ReflectionCTor*> ctorsHolder; \
 			std::vector<ReflectionParam*> paramsHolder; \
 			std::vector<ReflectionFunction*> functionsHolder;
@@ -130,8 +132,18 @@ class ReflectionMacroConverter {
 #define END_REGISTER_FUNCTION(className, functionName, returnType, functionCount) \
 			functionsHolder.push_back(new ReflectionFunction(tmpFunctionName, #returnType, paramsHolder, &className ## CallFunction_ ## functionName ## functionCount));
 //-------------------------------------------------------------------------------------------------
+#define REGISTER_MEMBER(type, memberName, offset) \
+			membersHolder.push_back(new ReflectionMember(#memberName, typeid(type).name(), #type, offset));
+//-------------------------------------------------------------------------------------------------
 #define END_REGISTER_CLASS(className) \
-			ReflectionClass* tmpClass = new ReflectionClass(sClassName, superClasses, ctorsHolder, functionsHolder); \
+			ReflectionClass* tmpClass = new ReflectionClass(sClassName, typeid(className).name(), superClasses, ctorsHolder, functionsHolder, membersHolder, ReflectionClass::CLASS); \
+			Reflection::getInstance().registerClass(tmpClass); \
+		} \
+	}; \
+	className ## _ReflectionStruct refStruct ## className;
+//-------------------------------------------------------------------------------------------------
+#define END_REGISTER_STRUCT(className) \
+			ReflectionClass* tmpClass = new ReflectionClass(sClassName, typeid(className).name(), superClasses, ctorsHolder, functionsHolder, membersHolder, ReflectionClass::STRUCT); \
 			Reflection::getInstance().registerClass(tmpClass); \
 		} \
 	}; \
