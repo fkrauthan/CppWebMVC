@@ -13,14 +13,16 @@
 
 class ReflectionParam {
 	public:
-		ReflectionParam(const std::string& name, const std::string& type);
+		ReflectionParam(const std::string& name, const std::string& typeIdName, const std::string& type);
 		~ReflectionParam();
 
 		std::string& getName();
+		std::string& getTypeIdName();
 		std::string& getType();
 
 	private:
 		std::string mName;
+		std::string mTypeIdName;
 		std::string mType;
 };
 

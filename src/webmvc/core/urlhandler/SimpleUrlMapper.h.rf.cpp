@@ -31,7 +31,7 @@ BEGIN_REGISTER_CLASS(SimpleUrlMapper)
 		REGISTER_PARAM(std::vector<IInterceptor*>, interceptors)
 	END_REGISTER_FUNCTION(SimpleUrlMapper, setInterceptors, void, 0)
 	START_REGISTER_FUNCTION(setMappings)
-		REGISTER_PARAM(MAP(std::string, BasicController*), mappings)
+		REGISTER_PARAM(MAP(std::string, IBasicController*), mappings)
 	END_REGISTER_FUNCTION(SimpleUrlMapper, setMappings, void, 1)
 END_REGISTER_CLASS(SimpleUrlMapper)
 

@@ -126,8 +126,8 @@ class ReflectionMacroConverter {
 			paramsHolder.clear(); \
 			tmpFunctionName = #functionName;
 //-------------------------------------------------------------------------------------------------
-#define REGISTER_PARAM(type, name) \
-			paramsHolder.push_back(new ReflectionParam(#name, #type));
+#define REGISTER_PARAM(type, paramName) \
+			paramsHolder.push_back(new ReflectionParam(#paramName, typeid(type).name(), #type));
 //-------------------------------------------------------------------------------------------------
 #define END_REGISTER_FUNCTION(className, functionName, returnType, functionCount) \
 			functionsHolder.push_back(new ReflectionFunction(tmpFunctionName, #returnType, paramsHolder, &className ## CallFunction_ ## functionName ## functionCount));
