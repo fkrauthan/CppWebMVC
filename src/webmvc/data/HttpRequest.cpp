@@ -131,3 +131,7 @@ IApplication* HttpRequest::getApplicationContext() const {
 void HttpRequest::setApplicationContext(IApplication* context) {
 	mApplication = context;
 }
+
+void HttpRequest::addAttribute(const std::string& name, const std::string& value) {
+	mAttributes[name] = value;
+}

@@ -18,6 +18,11 @@ class IUrlHandler : public IObject {
 		virtual ~IUrlHandler() {}
 
 		virtual bool dispatchUrl(const HttpRequest& request, HttpResponse& response) = 0;
+
+	protected:
+		void addAttributeToRequest(HttpRequest& request, const std::string& name, const std::string& value) {
+			request.addAttribute(name, value);
+		}
 };
 
 #endif /* IURLHANDLER_H_ */

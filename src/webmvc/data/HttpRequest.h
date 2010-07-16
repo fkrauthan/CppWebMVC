@@ -15,10 +15,12 @@
 #include <map>
 
 class IApplication;
+class IUrlHandler;
 
 
 class HttpRequest {
 	friend class IApplication;
+	friend class IUrlHandler;
 
 	public:
 		HttpRequest(const std::vector<HttpCookie>& cookies, const std::map<std::string, std::string>& headerFields,
@@ -50,6 +52,7 @@ class HttpRequest {
 
 	protected:
 		void setApplicationContext(IApplication* context);
+		void addAttribute(const std::string& name, const std::string& value);
 
 	private:
 		std::vector<HttpCookie> mCookies;

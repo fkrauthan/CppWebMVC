@@ -38,6 +38,7 @@ class SimpleUrlMapper : public IUrlHandler {
 		std::vector<IInterceptor*> mInterceptors;
 		std::vector<std::pair<std::string, IBasicController*> > mMappings;
 		std::vector<std::pair<boost::regex, IBasicController*> > mMappingsWithRegex;
+		std::vector<std::vector<std::string> > mMappingsGroupNames;
 };
 
 #endif /* SIMPLEURLMAPPER_H_ */

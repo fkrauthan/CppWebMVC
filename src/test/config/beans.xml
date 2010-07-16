@@ -14,6 +14,7 @@
                 <item key="/test2">testController</item>
                 <item key="/test3">testController</item>
                 <item key="/regexTest/.*">testController</item>
+                <item key="/view/(?<view>\d+)">testController</item>
             </map>
         </property>
     </bean>

@@ -33,6 +33,9 @@ ModelAndView TestController::handleRequestInternal(const HttpRequest& request, H
 		if(request.containsCookie("TestCookie")) {
 			response << ": Cookie value=" << request.getCookie("TestCookie").getValue();
 		}
+		if(request.hasAttribute("view")) {
+			response << "<br />View id is: " << request.getAttribute("view");
+		}
 	}
 
 	return ModelAndView();
