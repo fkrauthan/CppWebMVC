@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <boost/regex.hpp>
 
 
 class SimpleUrlMapper : public IUrlHandler {
@@ -24,15 +25,19 @@ class SimpleUrlMapper : public IUrlHandler {
 		void setInterceptors(std::vector<IInterceptor*> interceptors);
 		std::vector<IInterceptor*>& getInterceptors();
 
-		void setMappings(std::map<std::string, IBasicController*> mappings);
-		std::map<std::string, IBasicController*>& getMappings();
+		void setMappings(std::vector<std::pair<std::string, IBasicController*> > mappings);
+		std::vector<std::pair<std::string, IBasicController*> >& getMappings();
 
 
 		bool dispatchUrl(const HttpRequest& request, HttpResponse& response);
 
 	private:
+		void compileRegexs();
+
+	private:
 		std::vector<IInterceptor*> mInterceptors;
-		std::map<std::string, IBasicController*> mMappings;
+		std::vector<std::pair<std::string, IBasicController*> > mMappings;
+		std::vector<std::pair<boost::regex, IBasicController*> > mMappingsWithRegex;
 };
 
 #endif /* SIMPLEURLMAPPER_H_ */

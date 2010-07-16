@@ -11,6 +11,7 @@
 #include <xml/rapidxml.hpp>
 #include <boost/any.hpp>
 #include "BeanDef.h"
+#include <map>
 
 
 class BeanFactory {

@@ -5,7 +5,7 @@
  *      Author: fkrauthan
  */
 
-#include "TextSession.h"
+/*#include "TextSession.h"
 #include "../exceptions/AttributeNotFoundException.h"
 
 
@@ -83,4 +83,4 @@ void TextSession::invalidate() {
 
 void TextSession::startNewSession() {
 	//TODO: session starten
-}
+}*/

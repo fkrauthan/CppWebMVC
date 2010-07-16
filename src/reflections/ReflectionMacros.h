@@ -50,6 +50,22 @@ class ReflectionMacroConverter {
 			return retValue;
 		}
 
+		template<typename M, typename T> static std::vector<std::pair<M, T> > convertVectorPair(const std::vector<std::pair<boost::any, boost::any> >& value) {
+			std::vector<std::pair<M, T> > retValue;
+			for(unsigned int i=0; i<value.size(); i++) {
+				retValue.push_back(std::pair<M, T>(boost::any_cast<M>(value[i].first,  boost::any_cast<T>(value[i].second))));
+			}
+			return retValue;
+		}
+
+		template<typename M, typename T> static std::vector<std::pair<M, T> > convertVectorPairWithPointer(const std::vector<std::pair<boost::any, boost::any> >& value) {
+			std::vector<std::pair<M, T> > retValue;
+			for(unsigned int i=0; i<value.size(); i++) {
+				retValue.push_back(std::pair<M, T>(boost::any_cast<M>(value[i].first), ReflectionMacroConverter::convertPointer<T>(value[i].second)));
+			}
+			return retValue;
+		}
+
 		template<typename T> static T convertPointer(const boost::any& value) {
 			if(std::strcmp(value.type().name(), "Pv")==0) {
 				return reinterpret_cast< T >(boost::any_cast< void* >(value));
@@ -94,6 +110,10 @@ class ReflectionMacroConverter {
 #define ADD_MAP_PARAMETER(keyType, valueType, index) ReflectionMacroConverter::convertMap<keyType, valueType>(boost::any_cast<std::vector<std::pair<boost::any, boost::any> > >(params[index]))
 //-------------------------------------------------------------------------------------------------
 #define ADD_MAP_POINTER_PARAMETER(keyType, valueType, index) ReflectionMacroConverter::convertMapWithPointer<keyType, valueType>(boost::any_cast<std::vector<std::pair<boost::any, boost::any> > >(params[index]))
+//-------------------------------------------------------------------------------------------------
+#define ADD_VECTOR_PAIR_PARAMETER(keyType, valueType, index) ReflectionMacroConverter::convertVectorPair<keyType, valueType>(boost::any_cast<std::vector<std::pair<boost::any, boost::any> > >(params[index]))
+//-------------------------------------------------------------------------------------------------
+#define ADD_VECTOR_PAIR_POINTER_PARAMETER(keyType, valueType, index) ReflectionMacroConverter::convertVectorPairWithPointer<keyType, valueType>(boost::any_cast<std::vector<std::pair<boost::any, boost::any> > >(params[index]))
 //-------------------------------------------------------------------------------------------------
 #define END_CREATE_FUNCTIONCALL() )); \
 		}

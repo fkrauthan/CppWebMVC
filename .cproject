@@ -39,6 +39,7 @@
 <option id="gnu.cpp.link.option.libs.868921769" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 <listOptionValue builtIn="false" value="dl"/>
 <listOptionValue builtIn="false" value="boost_thread-mt"/>
+<listOptionValue builtIn="false" value="boost_regex"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1537582148" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 <additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -507,6 +508,7 @@
 <option id="gnu.cpp.link.option.libs.650749877" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 <listOptionValue builtIn="false" value="dl"/>
 <listOptionValue builtIn="false" value="boost_thread-mt"/>
+<listOptionValue builtIn="false" value="boost_regex"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.418462999" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 <additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>

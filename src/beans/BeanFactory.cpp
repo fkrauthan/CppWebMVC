@@ -154,7 +154,7 @@ void BeanFactory::parseBean(xml_node<>* bean_node) {
 			tmpNode = tmpNode->first_node("item");
 			while(tmpNode) {
 				std::string key = tmpNode->first_attribute("key")->value();
-				prop.valueMap[key] = tmpNode->value();
+				prop.valueMap.push_back(std::pair<std::string, std::string>(key, tmpNode->value()));
 
 				tmpNode = tmpNode->next_sibling("item");
 			}
@@ -206,7 +206,7 @@ void BeanFactory::parseBean(xml_node<>* bean_node) {
 				tmpNode = tmpNode->first_node("item");
 				while(tmpNode) {
 					std::string key = tmpNode->first_attribute("key")->value();
-					prop.valueMap[key] = tmpNode->value();
+					prop.valueMap.push_back(std::pair<std::string, std::string>(key, tmpNode->value()));
 
 					tmpNode = tmpNode->next_sibling("item");
 				}
@@ -271,7 +271,7 @@ boost::any BeanFactory::convertStringtoBoostAny(const BeanProperty& prop, const 
 	//Convert map
 	if(prop.isMap) {
 		std::vector<std::pair<boost::any, boost::any> > tmpMapVec;
-		std::map<std::string, std::string>::const_iterator iter;
+		std::vector<std::pair<std::string, std::string> >::const_iterator iter;
 
 		size_t commaPos = 0;
 		std::string keyType = to.substr(4, (commaPos=to.find_first_of(','))-4);

@@ -9,8 +9,8 @@
 #define BEANDEF_H_
 
 #include <string>
-#include <map>
 #include <vector>
+#include <map>
 
 class IObject;
 
@@ -19,7 +19,7 @@ struct BeanProperty {
 	std::string value;
 
 	bool isMap;
-	std::map<std::string, std::string> valueMap;
+	std::vector<std::pair<std::string, std::string> > valueMap;
 
 	bool isVector;
 	std::vector<std::string> valueVector;
