@@ -22,6 +22,7 @@ class Application : public IApplication {
 		void setBeanFactory(BeanFactory* beanFactory);
 
 		void setThreadPoolSize(int size);
+		void setSessionManager(HttpSession* session);
 
 		void handleRequest(boost::function<void (HttpRequest*&, HttpResponse*&, void*)> convertData, void* data, boost::function<void (HttpRequest*, HttpResponse*)> requestFinish);
 
@@ -30,6 +31,7 @@ class Application : public IApplication {
 
 	private:
 		BeanFactory* mBeanFactory;
+		HttpSession* mSessionManager;
 
 		boost::threadpool::pool* mThreadPool;
 };

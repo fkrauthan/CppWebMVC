@@ -23,7 +23,7 @@ template <typename T, typename U> class MapDataConverter : public TextSerializer
 		std::stringstream result;
 		result << realInput.size() << "|";
 
-		/*for(std::map<T, U>::const_iterator iter = realInput.begin(); iter != realInput.end(); ++iter) {
+		for(typename std::map<T, U>::const_iterator iter = realInput.begin(); iter != realInput.end(); ++iter) {
 			if(iter != realInput.begin()) {
 				result << "|";
 			}
@@ -31,7 +31,7 @@ template <typename T, typename U> class MapDataConverter : public TextSerializer
 			result << TextSerializer::getInstance().serialize<T>(iter->first);
 			result << "|";
 			result << TextSerializer::getInstance().serialize<U>(iter->second);
-		}*/
+		}
 		return result.str();
 	}
 

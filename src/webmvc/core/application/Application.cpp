@@ -7,12 +7,14 @@
 
 #include "Application.h"
 #include "../IUrlHandler.h"
+#include "../../data/HttpSession.h"
 #include <iostream>
 
 
 Application::Application() {
 	mBeanFactory = NULL;
 	mThreadPool = NULL;
+	mSessionManager = NULL;
 
 	setThreadPoolSize(1);
 }
@@ -28,6 +30,10 @@ void Application::setThreadPoolSize(int size) {
 
 void Application::setBeanFactory(BeanFactory* beanFactory) {
 	mBeanFactory = beanFactory;
+}
+
+void Application::setSessionManager(HttpSession* session) {
+	mSessionManager = session;
 }
 
 BeanFactory* Application::getBeanFactory() {
@@ -49,6 +55,9 @@ void Application::executeRequest(boost::function<void (HttpRequest*&, HttpRespon
 		return;
 	}
 	setContextToRequest(request);
+	if(mSessionManager) {
+		setSession(request, mSessionManager->createSession(*request, *response));
+	}
 
 
 	IUrlHandler* urlHandler = getBeanFactory()->getBean<IUrlHandler>("urlHandler");

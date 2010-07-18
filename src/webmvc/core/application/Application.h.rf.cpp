@@ -23,6 +23,10 @@ BEGIN_CREATE_FUNCTIONCALL_VOID(Application, setThreadPoolSize, 2)
 	ADD_PARAMETER(int, 0)
 END_CREATE_FUNCTIONCALL_VOID()
 
+BEGIN_CREATE_FUNCTIONCALL_VOID(Application, setSessionManager, 3)
+	ADD_PARAMETER(HttpSession*, 0)
+END_CREATE_FUNCTIONCALL_VOID()
+
 
 BEGIN_REGISTER_CLASS(Application)
 	REGISTER_INTERFACE(IApplication)
@@ -38,5 +42,8 @@ BEGIN_REGISTER_CLASS(Application)
 	START_REGISTER_FUNCTION(setThreadPoolSize)
 		REGISTER_PARAM(int, size)
 	END_REGISTER_FUNCTION(Application, setThreadPoolSize, void, 2)
+	START_REGISTER_FUNCTION(setSessionManager)
+		REGISTER_PARAM(HttpSession*, session)
+	END_REGISTER_FUNCTION(Application, setSessionManager, void, 3)
 END_REGISTER_CLASS(Application)
 

@@ -193,7 +193,7 @@ SERIALIZATION_REGISTER_START(DEFAULT_SERIALIZER)
 	SERIALIZATION_VECTOR(SERIALIZATION_PAIR_STRING(std::string, std::string) )
 
 
-	/*SERIALIZATION_MAP(int)
+	SERIALIZATION_MAP(int)
 	SERIALIZATION_MAP(long)
 	SERIALIZATION_MAP(short)
 	SERIALIZATION_MAP(char)
@@ -202,9 +202,9 @@ SERIALIZATION_REGISTER_START(DEFAULT_SERIALIZER)
 	SERIALIZATION_MAP(bool)
 	SERIALIZATION_MAP(unsigned int)
 	SERIALIZATION_MAP(unsigned long)
-	SERIALIZATION_MAP(std::string)*/
+	SERIALIZATION_MAP(std::string)
 
-	/*SERIALIZATION_MAP_TWICE(int, long)
+	SERIALIZATION_MAP_TWICE(int, long)
 	SERIALIZATION_MAP_TWICE(int, short)
 	SERIALIZATION_MAP_TWICE(int, char)
 	SERIALIZATION_MAP_TWICE(int, float)
@@ -248,7 +248,7 @@ SERIALIZATION_REGISTER_START(DEFAULT_SERIALIZER)
 	SERIALIZATION_MAP_TWICE(bool, std::string)
 	SERIALIZATION_MAP_TWICE(unsigned int, unsigned long)
 	SERIALIZATION_MAP_TWICE(unsigned int, std::string)
-	SERIALIZATION_MAP_TWICE(unsigned long, std::string)*/
+	SERIALIZATION_MAP_TWICE(unsigned long, std::string)
 
 
 	//TextSerializer::getInstance().registerDataConverter(new VectorDataConverter<std::pair<std::string, int> >());

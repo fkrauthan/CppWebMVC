@@ -28,6 +28,9 @@ class IApplication : public IObject {
 		void setContextToRequest(HttpRequest* request) {
 			request->setApplicationContext(this);
 		}
+		void setSession(HttpRequest* request, HttpSession* session) {
+			request->setSession(session);
+		}
 };
 
 #endif /* IAPPLICATION_H_ */

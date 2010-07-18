@@ -21,7 +21,8 @@ HttpRequest::HttpRequest(const std::vector<HttpCookie>& cookies, const std::map<
 	mAttributes(attributes),
 	mUri(uri),
 	mQuery(query),
-	mApplication(NULL) {
+	mApplication(NULL),
+	mSession(NULL) {
 }
 
 const HttpCookie& HttpRequest::getCookie(const std::string& name) const {
@@ -128,8 +129,16 @@ IApplication* HttpRequest::getApplicationContext() const {
 	return mApplication;
 }
 
+HttpSession* HttpRequest::getSession() const {
+	return mSession;
+}
+
 void HttpRequest::setApplicationContext(IApplication* context) {
 	mApplication = context;
+}
+
+void HttpRequest::setSession(HttpSession* session) {
+	mSession = session;
 }
 
 void HttpRequest::addAttribute(const std::string& name, const std::string& value) {

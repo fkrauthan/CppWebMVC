@@ -16,6 +16,7 @@
 
 class IApplication;
 class IUrlHandler;
+class HttpSession;
 
 
 class HttpRequest {
@@ -49,9 +50,11 @@ class HttpRequest {
 		const std::string& getRequestQuery() const;
 
 		IApplication* getApplicationContext() const;
+		HttpSession* getSession() const;
 
 	protected:
 		void setApplicationContext(IApplication* context);
+		void setSession(HttpSession* session);
 		void addAttribute(const std::string& name, const std::string& value);
 
 	private:
@@ -67,6 +70,7 @@ class HttpRequest {
 		std::string mQuery;
 
 		IApplication* mApplication;
+		HttpSession* mSession;
 };
 
 
