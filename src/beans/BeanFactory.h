@@ -33,6 +33,7 @@ class BeanFactory {
 		void parseImport(rapidxml::xml_node<>* import_node);
 		bool createBean(BeanDef* def);
 
+		std::string trim(std::string str);
 	private:
 		std::map<std::string, BeanDef*> beanObjects;
 };

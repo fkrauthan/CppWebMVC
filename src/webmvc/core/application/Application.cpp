@@ -62,18 +62,29 @@ void Application::executeRequest(boost::function<void (HttpRequest*&, HttpRespon
 
 	IUrlHandler* urlHandler = getBeanFactory()->getBean<IUrlHandler>("urlHandler");
 	if(!urlHandler) {
+		if(mSessionManager) {
+			mSessionManager->removeSession(request->getSession());
+		}
+
 		std::cout << "No URL Handler found set error page: 500" << std::endl;
 		requestFinish(request, response);
 
 		return;
 	}
 	if(!urlHandler->dispatchUrl(*request, *response)) {
+		if(mSessionManager) {
+			mSessionManager->removeSession(request->getSession());
+		}
+
 		std::cout << "URL handle error set error page: 500" << std::endl;
 		requestFinish(request, response);
 
 		return;
 	}
 
+	if(mSessionManager) {
+		mSessionManager->removeSession(request->getSession());
+	}
 
 	response->flush();
 	requestFinish(request, response);

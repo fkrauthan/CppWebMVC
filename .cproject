@@ -51,6 +51,9 @@
 </tool>
 </toolChain>
 </folderInfo>
+<sourceEntries>
+<entry excluding="src/test/TestController.h.rf.cpp|src/webmvc/core/application/Application.h.rf.cpp|src/webmvc/core/urlhandler/SimpleUrlMapper.h.rf.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+</sourceEntries>
 </configuration>
 </storageModule>
 <storageModule moduleId="scannerConfiguration">
@@ -520,6 +523,9 @@
 </tool>
 </toolChain>
 </folderInfo>
+<sourceEntries>
+<entry excluding="src/test/TestController.h.rf.cpp|src/webmvc/core/application/Application.h.rf.cpp|src/webmvc/core/urlhandler/SimpleUrlMapper.h.rf.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+</sourceEntries>
 </configuration>
 </storageModule>
 <storageModule moduleId="scannerConfiguration">

@@ -269,22 +269,47 @@ bool BeanFactory::createBean(BeanDef* def) {
 
 boost::any BeanFactory::convertStringtoBoostAny(const BeanProperty& prop, const std::string& to) {
 	//Convert map
-	if(prop.isMap) {
+	if(prop.isMap&&(to.substr(0, to.find_first_of('<'))=="vector" || to.substr(0, to.find_first_of('<'))=="std::vector")) {
 		std::vector<std::pair<boost::any, boost::any> > tmpMapVec;
 		std::vector<std::pair<std::string, std::string> >::const_iterator iter;
 
 		size_t commaPos = 0;
-		std::string keyType = to.substr(4, (commaPos=to.find_first_of(','))-4);
-		std::string valueType = to.substr(commaPos+1, to.find_last_of(')')-commaPos-1);
+		size_t findStart = to.find_first_of('<');
+		findStart = to.find_first_of('<', findStart+1)+1;
+		std::string keyType = to.substr(findStart, (commaPos=to.find_first_of(','))-findStart);
+		std::string valueType = to.substr(commaPos+1, to.find_first_of('>')-commaPos-1);
 
 		for(iter = prop.valueMap.begin(); iter != prop.valueMap.end(); ++iter) {
 			BeanProperty tmpProp;
 			tmpProp.isMap = false; tmpProp.isVector = false;
 			tmpProp.value = iter->first;
-			boost::any keyVar = convertStringtoBoostAny(tmpProp, keyType);
+			boost::any keyVar = convertStringtoBoostAny(tmpProp, trim(keyType));
 
 			tmpProp.value = iter->second;
-			boost::any valueVar = convertStringtoBoostAny(tmpProp, valueType);
+			boost::any valueVar = convertStringtoBoostAny(tmpProp, trim(valueType));
+
+			tmpMapVec.push_back(std::pair<boost::any, boost::any>(keyVar, valueVar));
+		}
+
+		return boost::any(tmpMapVec);
+	}
+	else if(prop.isMap) {
+		std::vector<std::pair<boost::any, boost::any> > tmpMapVec;
+		std::vector<std::pair<std::string, std::string> >::const_iterator iter;
+
+		size_t commaPos = 0;
+		size_t findStart = to.find_first_of('<')+1;
+		std::string keyType = to.substr(findStart, (commaPos=to.find_first_of(','))-findStart);
+		std::string valueType = to.substr(commaPos+1, to.find_first_of('>')-commaPos-1);
+
+		for(iter = prop.valueMap.begin(); iter != prop.valueMap.end(); ++iter) {
+			BeanProperty tmpProp;
+			tmpProp.isMap = false; tmpProp.isVector = false;
+			tmpProp.value = iter->first;
+			boost::any keyVar = convertStringtoBoostAny(tmpProp, trim(keyType));
+
+			tmpProp.value = iter->second;
+			boost::any valueVar = convertStringtoBoostAny(tmpProp, trim(valueType));
 
 			tmpMapVec.push_back(std::pair<boost::any, boost::any>(keyVar, valueVar));
 		}
@@ -296,12 +321,13 @@ boost::any BeanFactory::convertStringtoBoostAny(const BeanProperty& prop, const 
 	if(prop.isVector) {
 		std::vector<boost::any> tmpVector;
 
-		std::string type = to.substr(12, to.find_last_of('>')-12);
+		size_t findStart = to.find_first_of('<')+1;
+		std::string type = to.substr(findStart, to.find_last_of('>')-findStart);
 		for(unsigned int i=0; i<prop.valueVector.size(); i++) {
 			BeanProperty tmpProp;
 			tmpProp.isMap = false; tmpProp.isVector = false;
 			tmpProp.value = prop.valueVector[i];
-			boost::any value = convertStringtoBoostAny(tmpProp, type);
+			boost::any value = convertStringtoBoostAny(tmpProp, trim(type));
 			tmpVector.push_back(value);
 		}
 
@@ -343,4 +369,13 @@ boost::any BeanFactory::convertStringtoBoostAny(const BeanProperty& prop, const 
 	throw BeanFactoryException("The type "+to+" has no converter.");
 
 	return (void*)NULL;
+}
+
+std::string BeanFactory::trim(std::string str) {
+	std::string::size_type pos = str.find_first_not_of(" \t\n\r");
+	str = str.erase(0, pos);
+	pos = str.find_last_not_of(" \t\n\r") + 1;
+	str = str.erase(pos);
+
+	return str;
 }
