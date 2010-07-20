@@ -80,3 +80,7 @@ void HttpSession::setAttribute(const std::string& name, const std::string& value
 void HttpSession::invalidate() {
 	mInvalidated = true;
 }
+
+bool HttpSession::isInvalid() {
+	return mInvalidated;
+}

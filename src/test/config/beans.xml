@@ -2,9 +2,12 @@
 <beans>
     <bean id="testController" class="TestController" />
 
+    <bean id="mySessionManager" class="InMemorySessionManager">
+    </bean>
 
     <bean id="applicationContext" class="Application">
         <property name="threadPoolSize" value="20" />
+        <property name="sessionManager" ref="mySessionManager" />
     </bean>
 
     <bean id="urlHandler" class="SimpleUrlMapper">
@@ -15,6 +18,10 @@
                 <item key="/test3">testController</item>
                 <item key="/regexTest/.*">testController</item>
                 <item key="/view/(?<view>\d+)">testController</item>
+                
+                <item key="/session/info">testController</item>
+                <item key="/session/(?<action>set)/(?<key>.+)/(?<value>.+)">testController</item>
+                <item key="/session/(?<action>get)/(?<key>.+)">testController</item>
             </map>
         </property>
     </bean>

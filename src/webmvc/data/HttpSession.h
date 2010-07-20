@@ -39,6 +39,7 @@ class HttpSession {
 		template<typename T> void setAttribute(const std::string& name, T value);
 
 		virtual void invalidate();
+		virtual bool isInvalid();
 
 
 		virtual void startNewSession() = 0;

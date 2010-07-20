@@ -1,12 +1,13 @@
 /*
  * Reflection registration for header: Application.h
  *
- *   Created on: 19.07.2010
+ *   Created on: 20.07.2010
  *       Author: CodeGenerator V1.0
  */
 
 #include "Application.h"
 #include <reflections/Reflection.h>
+#include <reflections/ReflectionConverter.h>
 #include <stddef.h>
 #include <boost/any.hpp>
 
@@ -20,7 +21,7 @@ boost::any ApplicationCallFunction_getBeanFactory2(void* instance, const std::ve
 }
 
 boost::any ApplicationCallFunction_setBeanFactory3(void* instance, const std::vector<boost::any>& params) {
-	((Application*)instance)->setBeanFactory(boost::any_cast< BeanFactory* >(params[0]));
+	((Application*)instance)->setBeanFactory(ReflectionConverter::convertPointer<BeanFactory*>(params[0]));
 	return boost::any(0);
 }
 
@@ -30,7 +31,7 @@ boost::any ApplicationCallFunction_setThreadPoolSize4(void* instance, const std:
 }
 
 boost::any ApplicationCallFunction_setSessionManager5(void* instance, const std::vector<boost::any>& params) {
-	((Application*)instance)->setSessionManager(boost::any_cast< HttpSession* >(params[0]));
+	((Application*)instance)->setSessionManager(ReflectionConverter::convertPointer<HttpSession*>(params[0]));
 	return boost::any(0);
 }
 
