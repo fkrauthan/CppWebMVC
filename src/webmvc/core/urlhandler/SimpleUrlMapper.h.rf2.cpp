@@ -1,12 +1,13 @@
 /*
  * Reflection registration for header: SimpleUrlMapper.h
  *
- *   Created on: 19.07.2010
+ *   Created on: 20.07.2010
  *       Author: CodeGenerator V1.0
  */
 
 #include "SimpleUrlMapper.h"
 #include <reflections/Reflection.h>
+#include <reflections/ReflectionConverter.h>
 #include <stddef.h>
 #include <boost/any.hpp>
 
@@ -16,7 +17,7 @@ void* SimpleUrlMapperConstructorCreateFunction0(const std::vector<boost::any>& p
 }
 
 boost::any SimpleUrlMapperCallFunction_setInterceptors2(void* instance, const std::vector<boost::any>& params) {
-	((SimpleUrlMapper*)instance)->setInterceptors(boost::any_cast< std::vector< IInterceptor* > >(params[0]));
+	((SimpleUrlMapper*)instance)->setInterceptors(ReflectionConverter::convertVector<IInterceptor*>(boost::any_cast<std::vector<boost::any> >(params[0])));
 	return boost::any(0);
 }
 
@@ -25,7 +26,7 @@ boost::any SimpleUrlMapperCallFunction_getInterceptors3(void* instance, const st
 }
 
 boost::any SimpleUrlMapperCallFunction_setMappings4(void* instance, const std::vector<boost::any>& params) {
-	((SimpleUrlMapper*)instance)->setMappings(boost::any_cast< std::vector< std::pair< std::string, IBasicController* > > >(params[0]));
+	((SimpleUrlMapper*)instance)->setMappings(ReflectionConverter::convertVectorPairWithPointer<std::string, IBasicController*>(boost::any_cast<std::vector<std::pair<boost::any, boost::any> > >(params[0])));
 	return boost::any(0);
 }
 

@@ -45,7 +45,7 @@ class ReflectionConverter {
 		template<typename M, typename T> static std::map<M, T> convertMapWithPointer(const std::vector<std::pair<boost::any, boost::any> >& value) {
 			std::map<M, T> retValue;
 			for(unsigned int i=0; i<value.size(); i++) {
-				retValue[boost::any_cast<M>(value[i].first)] = ReflectionMacroConverter::convertPointer<T>(value[i].second);
+				retValue[boost::any_cast<M>(value[i].first)] = ReflectionConverter::convertPointer<T>(value[i].second);
 			}
 			return retValue;
 		}
@@ -61,7 +61,7 @@ class ReflectionConverter {
 		template<typename M, typename T> static std::vector<std::pair<M, T> > convertVectorPairWithPointer(const std::vector<std::pair<boost::any, boost::any> >& value) {
 			std::vector<std::pair<M, T> > retValue;
 			for(unsigned int i=0; i<value.size(); i++) {
-				retValue.push_back(std::pair<M, T>(boost::any_cast<M>(value[i].first), ReflectionMacroConverter::convertPointer<T>(value[i].second)));
+				retValue.push_back(std::pair<M, T>(boost::any_cast<M>(value[i].first), ReflectionConverter::convertPointer<T>(value[i].second)));
 			}
 			return retValue;
 		}
