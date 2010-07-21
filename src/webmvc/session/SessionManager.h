@@ -30,7 +30,7 @@ class SessionManager : public IObject {
 		virtual bool existSessionId(const std::string& id) = 0;
 
 	protected:
-		virtual HttpSession* startSessionInternal(const std::string& sessionId, bool sessionIdFound) = 0;
+		virtual HttpSession* startSessionInternal(const std::string& sessionId, bool sessionIdFoun, const HttpRequest& request, HttpResponse& responsed) = 0;
 		virtual void cleanUpOldSessions() = 0;
 
 		std::string generateSessionId(const HttpRequest& request, HttpResponse& response);

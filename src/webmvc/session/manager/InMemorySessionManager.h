@@ -22,7 +22,7 @@ class InMemorySessionManager : public SessionManager {
 		bool existSessionId(const std::string& id);
 
 	protected:
-		HttpSession* startSessionInternal(const std::string& sessionId, bool sessionIdFound);
+		HttpSession* startSessionInternal(const std::string& sessionId, bool sessionIdFound, const HttpRequest& request, HttpResponse& response);
 		void cleanUpOldSessions();
 
 	private:

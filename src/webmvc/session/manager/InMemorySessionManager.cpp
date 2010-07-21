@@ -32,22 +32,27 @@ bool InMemorySessionManager::existSessionId(const std::string& id) {
 	return getSessionWithId(id) != NULL;
 }
 
-HttpSession* InMemorySessionManager::startSessionInternal(const std::string& sessionId, bool sessionIdFound) {
+HttpSession* InMemorySessionManager::startSessionInternal(const std::string& sessionId, bool sessionIdFound, const HttpRequest& request, HttpResponse& response) {
+	std::string sessionIdTmp = sessionId;
+
 	time_t seconds;
 	seconds = time(NULL);
 
 	if(sessionIdFound) {
-		HttpSession* session = getSessionWithId(sessionId);
+		HttpSession* session = getSessionWithId(sessionIdTmp);
 		if(session) {
 			HttpSession* tmpSession = new HttpSession(session->getId(), session->getCreationTime(), seconds, false, session->getAttributes());
-			delete mSessionStorage[sessionId];
-			mSessionStorage[sessionId] = tmpSession;
+			delete mSessionStorage[sessionIdTmp];
+			mSessionStorage[sessionIdTmp] = tmpSession;
 			return tmpSession;
+		}
+		else {
+			sessionIdTmp = generateSessionId(request, response);
 		}
 	}
 
-	HttpSession* session = new HttpSession(sessionId, seconds, seconds, true);
-	mSessionStorage[sessionId] = session;
+	HttpSession* session = new HttpSession(sessionIdTmp, seconds, seconds, true);
+	mSessionStorage[sessionIdTmp] = session;
 
 	return session;
 }

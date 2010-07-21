@@ -35,18 +35,18 @@ HttpSession* SessionManager::startSession(const HttpRequest& request, HttpRespon
 	if(mUseCookies) {
 		try {
 			const HttpCookie& sessionCookie = request.getCookie(mCookieName);
-			session = startSessionInternal(sessionCookie.getValue(), true);
+			session = startSessionInternal(sessionCookie.getValue(), true, request, response);
 		} catch(const CookieNotFoundException& ex) {
 		}
 	}
 	if(!session && mUseRequest) {
 		try {
-			session = startSessionInternal(request.getAttribute(mRequestName), true);
+			session = startSessionInternal(request.getAttribute(mRequestName), true, request, response);
 		} catch(const AttributeNotFoundException& ex) {
 		}
 	}
 	if(!session) {
-		session = startSessionInternal(generateSessionId(request, response), false);
+		session = startSessionInternal(generateSessionId(request, response), false, request, response);
 	}
 
 
