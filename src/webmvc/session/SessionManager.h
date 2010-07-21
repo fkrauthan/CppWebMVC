@@ -13,6 +13,7 @@
 #include <webmvc/data/HttpRequest.h>
 #include <webmvc/data/HttpResponse.h>
 #include <webmvc/data/HttpSession.h>
+#include <string>
 
 class ISessionIdGenerator;
 
@@ -22,7 +23,27 @@ class SessionManager : public IObject {
 		SessionManager();
 		virtual ~SessionManager();
 
-		//TODO getter und setter
+
+		void setUseCookies(bool useCookies);
+		bool useCookies();
+
+		void setUserRequest(bool useRequest);
+		bool useRequest();
+
+		void setCookieName(const std::string& cookieName);
+		std::string& getCookieName();
+
+		void setRequestName(const std::string& requestName);
+		std::string& getRequestName();
+
+		void setCookieLifeTime(int cookieLifeTime);
+		int getCookieLifeTime();
+
+		void setSessionLifeTime(long sessionLifeTime);
+		long getSessionLifeTime();
+
+		void setSessionIdGenerator(ISessionIdGenerator* sessionIdGenerator);
+		ISessionIdGenerator* getSessionIdGenerator();
 
 
 		HttpSession* startSession(const HttpRequest& request, HttpResponse& response);
@@ -40,9 +61,10 @@ class SessionManager : public IObject {
 		bool mUseRequest;
 		std::string mCookieName;
 		std::string mRequestName;
-		int mCookieLifeTime;
 
+		int mCookieLifeTime;
 		long mSessionLifeTime;
+
 		ISessionIdGenerator* mSessionIdGenerator;
 
 };

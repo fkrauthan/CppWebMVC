@@ -25,6 +25,67 @@ SessionManager::SessionManager() {
 }
 
 SessionManager::~SessionManager() {
+	delete mSessionIdGenerator;
+}
+
+void SessionManager::setUseCookies(bool useCookies) {
+	mUseCookies = useCookies;
+}
+
+bool SessionManager::useCookies() {
+	return mUseCookies;
+}
+
+void SessionManager::setUserRequest(bool useRequest) {
+	mUseRequest = useRequest;
+}
+
+bool SessionManager::useRequest() {
+	return mUseRequest;
+}
+
+void SessionManager::setCookieName(const std::string& cookieName) {
+	mCookieName = cookieName;
+}
+
+std::string& SessionManager::getCookieName() {
+	return mCookieName;
+}
+
+void SessionManager::setRequestName(const std::string& requestName) {
+	mRequestName = requestName;
+}
+
+std::string& SessionManager::getRequestName() {
+	return mRequestName;
+}
+
+void SessionManager::setCookieLifeTime(int cookieLifeTime) {
+	mCookieLifeTime = cookieLifeTime;
+}
+
+int SessionManager::getCookieLifeTime() {
+	return mCookieLifeTime;
+}
+
+void SessionManager::setSessionLifeTime(long sessionLifeTime) {
+	mSessionLifeTime = sessionLifeTime;
+}
+
+long SessionManager::getSessionLifeTime() {
+	return mSessionLifeTime;
+}
+
+void SessionManager::setSessionIdGenerator(ISessionIdGenerator* sessionIdGenerator) {
+	if(mSessionIdGenerator) {
+		delete mSessionIdGenerator;
+	}
+
+	mSessionIdGenerator = sessionIdGenerator;
+}
+
+ISessionIdGenerator* SessionManager::getSessionIdGenerator() {
+	return mSessionIdGenerator;
 }
 
 HttpSession* SessionManager::startSession(const HttpRequest& request, HttpResponse& response) {
