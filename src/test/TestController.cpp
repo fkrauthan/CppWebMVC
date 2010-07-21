@@ -30,23 +30,28 @@ ModelAndView TestController::handleRequestInternal(const HttpRequest& request, H
 		return ModelAndView(new RedirectView("http://localhost:8080/test2"));
 	}
 	else if(request.getRequestURI()=="/session/info") {
-		response << "Session Info<br />Instance: " << request.getSession() << "<br />";
-		if(request.getSession()) {
-			response << "Session ID: " << request.getSession()->getId() << "<br />";
-			response << "Anz Session Items: " << request.getSession()->getAttributeNames().size();
+		response << "Session Info<br />Instance: " << &request.getSession() << "<br />";
+		if(request.hasSession()) {
+			response << "Session ID: " << request.getSession().getId() << "<br />";
+			response << "Is new: " << request.getSession().isNew() << "<br />";
+			response << "Create time: " << request.getSession().getCreationTime() << "<br />";
+			response << "Access time: " << request.getSession().getLastAccessedTime() << "<br />";
+			response << "Anz Session Items: " << request.getSession().getAttributeNames().size();
 		}
-
+		else {
+			response << "No Session found";
+		}
 	}
 	else if(request.hasAttribute("action")) {
 		if(request.getAttribute("action") == "set") {
 			response << "Session Set<br />" << "Set key: " << request.getAttribute("key") << "<br />";
 			response << "Set value: " << request.getAttribute("value");
 
-			request.getSession()->setAttribute(request.getAttribute("key"), request.getAttribute("value"));
+			request.getSession().setAttribute(request.getAttribute("key"), request.getAttribute("value"));
 		}
 		else {
 			response << "Session Get<br />" << "Get for key: " << request.getAttribute("key") << "<br />";
-			response << "The Session value: " << request.getSession()->getAttribute(request.getAttribute("key"));
+			response << "The Session value: " << request.getSession().getAttribute(request.getAttribute("key"));
 		}
 	}
 	else {

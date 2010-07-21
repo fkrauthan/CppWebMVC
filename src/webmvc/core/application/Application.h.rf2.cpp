@@ -31,7 +31,7 @@ boost::any ApplicationCallFunction_setThreadPoolSize4(void* instance, const std:
 }
 
 boost::any ApplicationCallFunction_setSessionManager5(void* instance, const std::vector<boost::any>& params) {
-	((Application*)instance)->setSessionManager(ReflectionConverter::convertPointer<HttpSession*>(params[0]));
+	((Application*)instance)->setSessionManager(ReflectionConverter::convertPointer<SessionManager*>(params[0]));
 	return boost::any(0);
 }
 
@@ -61,7 +61,7 @@ struct Application_ReflectionStruct {
 		functionsHolder.push_back(new ReflectionFunction("setThreadPoolSize", "void", paramsHolder, &ApplicationCallFunction_setThreadPoolSize4));
 
 		paramsHolder.clear();
-		paramsHolder.push_back(new ReflectionParam("session", typeid(HttpSession*).name(), "HttpSession*"));
+		paramsHolder.push_back(new ReflectionParam("sessionManager", typeid(SessionManager*).name(), "SessionManager*"));
 		functionsHolder.push_back(new ReflectionFunction("setSessionManager", "void", paramsHolder, &ApplicationCallFunction_setSessionManager5));
 
 

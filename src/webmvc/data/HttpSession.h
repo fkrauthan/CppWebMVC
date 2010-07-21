@@ -17,42 +17,38 @@
 
 class HttpSession {
 	public:
-		HttpSession();
-		virtual ~HttpSession();
+		HttpSession(const std::string& id, long creationTime, long lastAccessTime, bool isNew, const std::map<std::string, std::string>& attributes = std::map<std::string, std::string>());
+		~HttpSession();
 
-		virtual std::string& getId();
+		std::string& getId();
 
-		virtual std::string& getAttribute(const std::string& name);
+		std::string& getAttribute(const std::string& name);
 		template<typename T> T getAttribute(const std::string& name);
-		virtual std::vector<std::string> getAttributeNames();
-		virtual bool hasAttribute(const std::string& name);
+		std::map<std::string, std::string>& getAttributes();
+		std::vector<std::string> getAttributeNames();
+		bool hasAttribute(const std::string& name);
 
-		virtual long getCreationTime();
-		virtual long getLastAccessedTime();
-		virtual int getMaxInactiveInterval();
+		long getCreationTime();
+		long getLastAccessedTime();
 
-		virtual bool isNew();
+		bool isNew();
 
 
-		virtual void removeAttribute(const std::string& name);
-		virtual void setAttribute(const std::string& name, const std::string& value);
+		void removeAttribute(const std::string& name);
+		void setAttribute(const std::string& name, const std::string& value);
 		template<typename T> void setAttribute(const std::string& name, T value);
 
-		virtual void invalidate();
-		virtual bool isInvalid();
+		void invalidate();
+		bool isInvalid();
 
 
-		virtual void startNewSession() = 0;
-
-
-		virtual HttpSession* createSession(const HttpRequest& request, HttpResponse& response) = 0;
-		virtual void removeSession(HttpSession* session) = 0;
+		//virtual HttpSession* createSession(const HttpRequest& request, HttpResponse& response) = 0;
+		//virtual void removeSession(HttpSession* session) = 0;
 
 	protected:
 		std::string mId;
 		long mCreationTime;
 		long mLastAccessdTime;
-		int mMaxInactiveInterval;
 
 		bool mNew;
 		bool mInvalidated;

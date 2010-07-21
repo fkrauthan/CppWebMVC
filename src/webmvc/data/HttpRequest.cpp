@@ -9,6 +9,7 @@
 #include "../exceptions/CookieNotFoundException.h"
 #include "../exceptions/HeaderFieldNotFoundException.h"
 #include "../exceptions/AttributeNotFoundException.h"
+#include "../exceptions/SessionNotFoundException.h"
 
 
 HttpRequest::HttpRequest(const std::vector<HttpCookie>& cookies, const std::map<std::string, std::string>& headerFields,
@@ -129,8 +130,16 @@ IApplication* HttpRequest::getApplicationContext() const {
 	return mApplication;
 }
 
-HttpSession* HttpRequest::getSession() const {
-	return mSession;
+HttpSession& HttpRequest::getSession() const {
+	if(!mSession) {
+		throw SessionNotFoundException("There is no session bound to this request");
+	}
+
+	return *mSession;
+}
+
+bool HttpRequest::hasSession() const {
+	return mSession != NULL;
 }
 
 void HttpRequest::setApplicationContext(IApplication* context) {

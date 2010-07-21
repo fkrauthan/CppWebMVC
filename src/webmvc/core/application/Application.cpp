@@ -32,7 +32,7 @@ void Application::setBeanFactory(BeanFactory* beanFactory) {
 	mBeanFactory = beanFactory;
 }
 
-void Application::setSessionManager(HttpSession* session) {
+void Application::setSessionManager(SessionManager* session) {
 	mSessionManager = session;
 }
 
@@ -48,6 +48,7 @@ void Application::executeRequest(boost::function<void (HttpRequest*&, HttpRespon
 	//Create request
 	HttpRequest* request = NULL;
 	HttpResponse* response = NULL;
+	HttpSession* session = NULL;
 	convertData(request, response, data);
 	if(request==NULL||response==NULL) {
 		requestFinish(request, response);
@@ -56,14 +57,17 @@ void Application::executeRequest(boost::function<void (HttpRequest*&, HttpRespon
 	}
 	setContextToRequest(request);
 	if(mSessionManager) {
-		setSession(request, mSessionManager->createSession(*request, *response));
+		session = mSessionManager->startSession(*request, *response);
+		if(session) {
+			setSession(request, session);
+		}
 	}
 
 
 	IUrlHandler* urlHandler = getBeanFactory()->getBean<IUrlHandler>("urlHandler");
 	if(!urlHandler) {
-		if(mSessionManager) {
-			mSessionManager->removeSession(request->getSession());
+		if(mSessionManager && session) {
+			mSessionManager->endSession(session, *request, *response);
 		}
 
 		std::cout << "No URL Handler found set error page: 500" << std::endl;
@@ -72,8 +76,8 @@ void Application::executeRequest(boost::function<void (HttpRequest*&, HttpRespon
 		return;
 	}
 	if(!urlHandler->dispatchUrl(*request, *response)) {
-		if(mSessionManager) {
-			mSessionManager->removeSession(request->getSession());
+		if(mSessionManager && session) {
+			mSessionManager->endSession(session, *request, *response);
 		}
 
 		std::cout << "URL handle error set error page: 500" << std::endl;
@@ -82,8 +86,8 @@ void Application::executeRequest(boost::function<void (HttpRequest*&, HttpRespon
 		return;
 	}
 
-	if(mSessionManager) {
-		mSessionManager->removeSession(request->getSession());
+	if(mSessionManager && session) {
+		mSessionManager->endSession(session, *request, *response);
 	}
 
 	response->flush();

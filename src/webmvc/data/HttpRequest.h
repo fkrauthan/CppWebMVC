@@ -10,6 +10,7 @@
 
 #include "HttpClientInfo.h"
 #include "HttpCookie.h"
+#include "HttpSession.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -50,7 +51,8 @@ class HttpRequest {
 		const std::string& getRequestQuery() const;
 
 		IApplication* getApplicationContext() const;
-		HttpSession* getSession() const;
+		HttpSession& getSession() const;
+		bool hasSession() const;
 
 	protected:
 		void setApplicationContext(IApplication* context);

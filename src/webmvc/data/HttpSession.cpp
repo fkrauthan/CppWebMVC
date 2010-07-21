@@ -9,7 +9,8 @@
 #include "../exceptions/AttributeNotFoundException.h"
 
 
-HttpSession::HttpSession() {
+HttpSession::HttpSession(const std::string& id, long creationTime, long lastAccessTime, bool isNew, const std::map<std::string, std::string>& attributes) :
+	mId(id), mCreationTime(creationTime), mLastAccessdTime(lastAccessTime), mNew(isNew), mInvalidated(false), mAttributes(attributes) {
 }
 
 HttpSession::~HttpSession() {
@@ -27,6 +28,10 @@ std::string& HttpSession::getAttribute(const std::string& name) {
 	}
 
 	return iter->second;
+}
+
+std::map<std::string, std::string>& HttpSession::getAttributes() {
+	return mAttributes;
 }
 
 std::vector<std::string> HttpSession::getAttributeNames() {
@@ -54,10 +59,6 @@ long HttpSession::getCreationTime() {
 
 long HttpSession::getLastAccessedTime() {
 	return mLastAccessdTime;
-}
-
-int HttpSession::getMaxInactiveInterval() {
-	return mMaxInactiveInterval;
 }
 
 bool HttpSession::isNew() {
