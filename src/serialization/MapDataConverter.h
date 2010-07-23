@@ -19,7 +19,7 @@ template <typename T, typename U> class MapDataConverter : public SerializerData
 		return typeid(std::map<T, U>).name() == type;
 	}
 
-	virtual std::string convertFromText(void* input) {
+	virtual std::string convertToText(void* input) {
 		std::map<T, U> realInput = *(std::map<T, U>*)input;
 
 		std::stringstream result;
@@ -37,7 +37,7 @@ template <typename T, typename U> class MapDataConverter : public SerializerData
 		return result.str();
 	}
 
-	virtual void convertToText(std::stringstream& input, void* destination) {
+	virtual void convertFromText(std::stringstream& input, void* destination) {
 		std::map<T, U> result;
 
 		unsigned int count = 0;
@@ -62,7 +62,7 @@ template <typename T, typename U> class MapDataConverter : public SerializerData
 		*((std::map<T, U>*)destination) = result;
 	}
 
-	virtual void convertFromXML(void* input, bool asAttribute, const std::string& name, rapidxml::xml_node<>& root)
+	virtual void convertToXML(void* input, bool asAttribute, rapidxml::xml_node<>& root)
 	{
 		if (asAttribute)
 		{
@@ -72,25 +72,26 @@ template <typename T, typename U> class MapDataConverter : public SerializerData
 		std::map<T, U> realInput = *(std::map<T, U>*)input;
 
 		rapidxml::xml_document<>* doc = root.document();
-
-		rapidxml::xml_node<>* node = doc->allocate_node(rapidxml::node_element, doc->allocate_string(name.c_str()));
-		root.append_node(node);
+		rapidxml::xml_node<>* node = (rapidxml::xml_node<>*)&root;
 
 		for(typename std::map<T, U>::const_iterator iter = realInput.begin(); iter != realInput.end(); ++iter)
 		{
 			rapidxml::xml_node<>* subNode = doc->allocate_node(rapidxml::node_element, doc->allocate_string("entry"));
 			node->append_node(subNode);
 
-			Serializer::getInstance().serializeToXML(iter->first, "Key", subNode);
-			Serializer::getInstance().serializeToXML(iter->second, "Value", subNode);
+			rapidxml::xml_node<>* subSubNode = doc->allocate_node(rapidxml::node_element, doc->allocate_string("key"));
+			subNode->append_node(subSubNode);
+			Serializer::getInstance().serializeToXML(iter->first, subSubNode);
+
+			subSubNode = doc->allocate_node(rapidxml::node_element, doc->allocate_string("value"));
+			subNode->append_node(subSubNode);
+			Serializer::getInstance().serializeToXML(iter->second, subSubNode);
 		}
 	}
 
-	virtual void convertToXML(void* output, bool fromAttribute, const std::string& name, rapidxml::xml_node<>& root)
+	virtual void convertFromXML(void* output, bool fromAttribute, rapidxml::xml_node<>& root)
 	{
-		rapidxml::xml_node<>* node = name.empty() ? &root : root.first_node(name.c_str());
-		if (node == NULL)
-			return;
+		rapidxml::xml_node<>* node = (rapidxml::xml_node<>*)&root;
 
 		std::map<T, U> result;
 
@@ -99,8 +100,11 @@ template <typename T, typename U> class MapDataConverter : public SerializerData
 			T first;
 			U second;
 
-			Serializer::getInstance().deserializeFromXML<T>(child, first, "Key");
-			Serializer::getInstance().deserializeFromXML<U>(child, second, "Value");
+			rapidxml::xml_node<>* tmpNode = child->first_node("key");
+			Serializer::getInstance().deserializeFromXML<T>(tmpNode, first);
+
+			tmpNode = child->first_node("value");
+			Serializer::getInstance().deserializeFromXML<U>(tmpNode, second);
 			result[first] = second;
 		}
 

@@ -17,5 +17,4 @@ class SerializationXmlAttributeNotSupportException : public std::runtime_error {
 		SerializationXmlAttributeNotSupportException(const std::string& msg) : std::runtime_error(msg) {}
 };
 
-
 #endif /* SERIALIZATIONXMLATTRIBUTENOTSUPPORTEXCEPTION_H_ */

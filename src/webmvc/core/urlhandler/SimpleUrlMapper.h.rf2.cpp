@@ -63,7 +63,7 @@ struct SimpleUrlMapper_ReflectionStruct {
 		functionsHolder.push_back(new ReflectionFunction("getMappings", "std::vector< std::pair< std::string, IBasicController* > >", paramsHolder, &SimpleUrlMapperCallFunction_getMappings5));
 
 
-		ReflectionClass* tmpClass = new ReflectionClass("SimpleUrlMapper", typeid(SimpleUrlMapper).name(), superClasses, ctorsHolder, functionsHolder, membersHolder, ReflectionClass::CLASS);
+		ReflectionClass* tmpClass = new ReflectionClass("SimpleUrlMapper", typeid(SimpleUrlMapper).name(), typeid(SimpleUrlMapper*).name(), superClasses, ctorsHolder, functionsHolder, membersHolder, ReflectionClass::CLASS);
 		Reflection::getInstance().registerClass(tmpClass);
 	}
 };

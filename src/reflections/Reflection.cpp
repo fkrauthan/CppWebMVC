@@ -25,6 +25,7 @@ void Reflection::registerClass(ReflectionClass* refClass) {
 
 	mRegisteredClasses[refClass->getName()] = refClass;
 	mRegisteredClassesByTypeId[refClass->getTypeIdName()] = refClass;
+	mRegisteredClassesByPointerTypeId[refClass->getPointerTypeIdName()] = refClass;
 }
 
 ReflectionClass* Reflection::getClass(const std::string& name) {
@@ -36,13 +37,28 @@ ReflectionClass* Reflection::getClass(const std::string& name) {
 	return iter->second;
 }
 
-ReflectionClass* Reflection::getClassByTypeId(const std::string& typeId) {
-	std::map<std::string, ReflectionClass*>::iterator iter = mRegisteredClassesByTypeId.find(typeId);
-	if(iter == mRegisteredClassesByTypeId.end()) {
-		return NULL;
+ReflectionClass* Reflection::getClassByTypeId(const std::string& typeId, bool* pointer) {
+	if(pointer) {
+		*pointer = true;
 	}
 
-	return iter->second;
+	std::map<std::string, ReflectionClass*>::iterator iter = mRegisteredClassesByTypeId.find(typeId);
+	if(iter == mRegisteredClassesByTypeId.end()) {
+		iter = mRegisteredClassesByPointerTypeId.find(typeId);
+		if(iter == mRegisteredClassesByPointerTypeId.end()) {
+			return NULL;
+		}
+		else {
+			return iter->second;
+		}
+	}
+	else {
+		if(pointer) {
+			*pointer = false;
+		}
+
+		return iter->second;
+	}
 }
 
 Reflection& Reflection::getInstance() {

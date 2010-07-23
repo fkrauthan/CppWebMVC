@@ -30,7 +30,7 @@ struct InMemorySessionManager_ReflectionStruct {
 		paramsHolder.clear();
 		ctorsHolder.push_back(new ReflectionCTor(paramsHolder, &InMemorySessionManagerConstructorCreateFunction0));
 
-		ReflectionClass* tmpClass = new ReflectionClass("InMemorySessionManager", typeid(InMemorySessionManager).name(), superClasses, ctorsHolder, functionsHolder, membersHolder, ReflectionClass::CLASS);
+		ReflectionClass* tmpClass = new ReflectionClass("InMemorySessionManager", typeid(InMemorySessionManager).name(), typeid(InMemorySessionManager*).name(), superClasses, ctorsHolder, functionsHolder, membersHolder, ReflectionClass::CLASS);
 		Reflection::getInstance().registerClass(tmpClass);
 	}
 };

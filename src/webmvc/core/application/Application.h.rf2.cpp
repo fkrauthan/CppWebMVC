@@ -65,7 +65,7 @@ struct Application_ReflectionStruct {
 		functionsHolder.push_back(new ReflectionFunction("setSessionManager", "void", paramsHolder, &ApplicationCallFunction_setSessionManager5));
 
 
-		ReflectionClass* tmpClass = new ReflectionClass("Application", typeid(Application).name(), superClasses, ctorsHolder, functionsHolder, membersHolder, ReflectionClass::CLASS);
+		ReflectionClass* tmpClass = new ReflectionClass("Application", typeid(Application).name(), typeid(Application*).name(), superClasses, ctorsHolder, functionsHolder, membersHolder, ReflectionClass::CLASS);
 		Reflection::getInstance().registerClass(tmpClass);
 	}
 };

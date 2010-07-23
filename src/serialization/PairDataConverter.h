@@ -19,7 +19,7 @@ template <typename T, typename U> class PairDataConverter : public SerializerDat
 		return typeid(std::pair<T, U>).name() == type;
 	}
 
-	virtual std::string convertFromText(void* input) {
+	virtual std::string convertToText(void* input) {
 		std::pair<T, U> realInput = *(std::pair<T, U>*)input;
 		std::stringstream result;
 
@@ -30,7 +30,7 @@ template <typename T, typename U> class PairDataConverter : public SerializerDat
 		return result.str();
 	}
 
-	virtual void convertToText(std::stringstream& input, void* destination) {
+	virtual void convertFromText(std::stringstream& input, void* destination) {
 		std::vector<T> result;
 		char delimiter;
 
@@ -44,7 +44,7 @@ template <typename T, typename U> class PairDataConverter : public SerializerDat
 		*((std::pair<T, U>*)destination) = std::make_pair(first, second);
 	}
 
-	virtual void convertFromXML(void* input, bool asAttribute, const std::string& name, rapidxml::xml_node<>& root)
+	virtual void convertToXML(void* input, bool asAttribute, rapidxml::xml_node<>& root)
 	{
 		if (asAttribute)
 		{
@@ -54,25 +54,29 @@ template <typename T, typename U> class PairDataConverter : public SerializerDat
 		std::pair<T, U> realInput = *(std::pair<T, U>*)input;
 
 		rapidxml::xml_document<>* doc = root.document();
+		rapidxml::xml_node<>* node = (rapidxml::xml_node<>*)&root;
 
-		rapidxml::xml_node<>* node = doc->allocate_node(rapidxml::node_element, doc->allocate_string(name.c_str()));
-		root.append_node(node);
+		rapidxml::xml_node<>* subNode = doc->allocate_node(rapidxml::node_element, doc->allocate_string("key"));
+		node->append_node(subNode);
+		Serializer::getInstance().serializeToXML<T>(realInput.first, subNode);
 
-		Serializer::getInstance().serializeToXML<T>(realInput.first, "Key", node);
-		Serializer::getInstance().serializeToXML<U>(realInput.second, "Value", node);
+		subNode = doc->allocate_node(rapidxml::node_element, doc->allocate_string("value"));
+		node->append_node(subNode);
+		Serializer::getInstance().serializeToXML<U>(realInput.second, subNode);
 	}
 
-	virtual void convertToXML(void* output, bool fromAttribute, const std::string& name, rapidxml::xml_node<>& root)
+	virtual void convertFromXML(void* output, bool fromAttribute, rapidxml::xml_node<>& root)
 	{
-		rapidxml::xml_node<>* node = name.empty() ? &root : root.first_node(name.c_str());
-		if (node == NULL)
-			return;
+		rapidxml::xml_node<>* node = (rapidxml::xml_node<>*)&root;
 
 		T first;
 		U second;
 
-		Serializer::getInstance().deserializeFromXML<T>(node, first, "Key");
-		Serializer::getInstance().deserializeFromXML<U>(node, second, "Value");
+		rapidxml::xml_node<>* tmpNode = node->first_node("key");
+		Serializer::getInstance().deserializeFromXML<T>(tmpNode, first);
+
+		tmpNode = node->first_node("value");
+		Serializer::getInstance().deserializeFromXML<U>(tmpNode, second);
 
 		*((std::pair<T, U>*)output) = std::make_pair(first, second);
 	}

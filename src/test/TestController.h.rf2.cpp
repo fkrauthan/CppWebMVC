@@ -29,7 +29,7 @@ struct TestController_ReflectionStruct {
 		paramsHolder.clear();
 		ctorsHolder.push_back(new ReflectionCTor(paramsHolder, &TestControllerConstructorCreateFunction0));
 
-		ReflectionClass* tmpClass = new ReflectionClass("TestController", typeid(TestController).name(), superClasses, ctorsHolder, functionsHolder, membersHolder, ReflectionClass::CLASS);
+		ReflectionClass* tmpClass = new ReflectionClass("TestController", typeid(TestController).name(), typeid(TestController*).name(), superClasses, ctorsHolder, functionsHolder, membersHolder, ReflectionClass::CLASS);
 		Reflection::getInstance().registerClass(tmpClass);
 	}
 };

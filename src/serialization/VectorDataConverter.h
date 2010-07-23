@@ -19,7 +19,7 @@ template <typename T> class VectorDataConverter : public SerializerDataConverter
 		return typeid(std::vector<T>).name() == type;
 	}
 
-	virtual std::string convertFromText(void* input) {
+	virtual std::string convertToText(void* input) {
 		std::vector<T> realInput = *(std::vector<T>*)input;
 
 		std::stringstream result;
@@ -33,7 +33,7 @@ template <typename T> class VectorDataConverter : public SerializerDataConverter
 		return result.str();
 	}
 
-	virtual void convertToText(std::stringstream& input, void* destination) {
+	virtual void convertFromText(std::stringstream& input, void* destination) {
 		std::vector<T> result;
 
 		unsigned int count = 0;
@@ -53,36 +53,35 @@ template <typename T> class VectorDataConverter : public SerializerDataConverter
 		*((std::vector<T>*)destination) = result;
 	}
 
-	virtual void convertFromXML(void* input, bool asAttribute, const std::string& name, rapidxml::xml_node<>& root)
+	virtual void convertToXML(void* input, bool asAttribute, rapidxml::xml_node<>& root)
 	{
 		if (asAttribute)
 		{
 			throw SerializationXmlAttributeNotSupportException("Attribute is not support for vector");
-			// TODO: Not Supported Exception
 		}
 
 		std::vector<T> realInput = *(std::vector<T>*)input;
 
 		rapidxml::xml_document<>* doc = root.document();
-
-		rapidxml::xml_node<>* node = doc->allocate_node(rapidxml::node_element, doc->allocate_string(name.c_str()));
-		root.append_node(node);
+		rapidxml::xml_node<>* node = (rapidxml::xml_node<>*)&root;
 
 		for(unsigned int i = 0; i < realInput.size(); i++)
-			Serializer::getInstance().serializeToXML<T>(realInput[i], "entry", node);
+		{
+			rapidxml::xml_node<>* subNode = doc->allocate_node(rapidxml::node_element, doc->allocate_string("entry"));
+			node->append_node(subNode);
+			Serializer::getInstance().serializeToXML<T>(realInput[i], subNode);
+		}
 	}
 
-	virtual void convertToXML(void* output, bool fromAttribute, const std::string& name, rapidxml::xml_node<>& root)
+	virtual void convertFromXML(void* output, bool fromAttribute, rapidxml::xml_node<>& root)
 	{
-		rapidxml::xml_node<>* node = name.empty() ? &root : root.first_node(name.c_str());
-		if (node == NULL)
-			return;
+		rapidxml::xml_node<>* node = (rapidxml::xml_node<>*)&root;
 
 		std::vector<T> result;
 		for (rapidxml::xml_node<> *child = node->first_node(); child; child = child->next_sibling())
 		{
 			T entry;
-			Serializer::getInstance().deserializeFromXML<T>(child, entry, "");
+			Serializer::getInstance().deserializeFromXML<T>(child, entry);
 			result.push_back(entry);
 		}
 		*((std::vector<T>*)output) = result;

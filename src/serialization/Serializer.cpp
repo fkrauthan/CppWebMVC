@@ -29,13 +29,11 @@ void Serializer::registerDataConverter(SerializerDataConverter* dataConverter) {
 	mDataConverters.push_back(dataConverter);
 }
 
-std::string Serializer::serializeToText(const std::string& type, const std::string& typeIdName, void* data) {
+std::string Serializer::serializeToText(const std::string& type, void* data) {
 	std::string finalType = type;
 
-	bool isPointer = false;
-	if(finalType[finalType.size()-1] == '*') {
-		isPointer = true;
-		finalType.resize(finalType.size() - 1);
+	bool isPointer = isTypeAPointer(finalType);
+	if(isPointer) {
 		data = (void*)*(void**)data;
 		if(data == NULL) {
 			return "NULL";
@@ -43,21 +41,13 @@ std::string Serializer::serializeToText(const std::string& type, const std::stri
 	}
 
 
-	ReflectionClass* reflectionClass = Reflection::getInstance().getClassByTypeId(typeIdName);
-	if(reflectionClass == NULL) {
-		reflectionClass = Reflection::getInstance().getClass(finalType);
-	}
-
+	ReflectionClass* reflectionClass = Reflection::getInstance().getClassByTypeId(finalType);
 	if(reflectionClass == NULL) {
 		SerializerDataConverter* converter = findConverter(finalType);
 		if(converter == NULL) {
-			converter = findConverter(typeIdName);
-		}
-
-		if(converter == NULL) {
 			throw NoSerializeConverterFoundException("Unable to serialize type " + finalType + ".");
 		}
-		return converter->convertFromText(data);
+		return converter->convertToText(data);
 	}
 
 	std::stringstream result;
@@ -72,10 +62,10 @@ std::string Serializer::serializeToText(const std::string& type, const std::stri
 
 		SerializerDataConverter* converter = findConverter(member->getTypeIdName());
 		if(converter == NULL) {
-			result << serializeToText(member->getType(), member->getTypeIdName(), currentDataSection);
+			result << serializeToText(member->getTypeIdName(), currentDataSection);
 		}
 		else {
-			result << converter->convertFromText(currentDataSection);
+			result << converter->convertToText(currentDataSection);
 		}
 	}
 
@@ -85,10 +75,8 @@ std::string Serializer::serializeToText(const std::string& type, const std::stri
 void Serializer::deserializeFromText(std::stringstream& input, const std::string& type, void* output) {
 	std::string finalType = type;
 
-	bool isPointer = false;
-	if(finalType[finalType.size()-1] == '*') {
-		isPointer = true;
-		finalType.resize(finalType.size() - 1);
+	bool isPointer = isTypeAPointer(finalType);
+	if(isPointer) {
 		std::stringstream::pos_type pos = input.tellg();
 		char null[4];
 		input.read(null, 4);
@@ -103,10 +91,6 @@ void Serializer::deserializeFromText(std::stringstream& input, const std::string
 
 	ReflectionClass* reflectionClass = Reflection::getInstance().getClassByTypeId(finalType);
 	if(reflectionClass == NULL) {
-		reflectionClass = Reflection::getInstance().getClass(finalType);
-	}
-
-	if(reflectionClass == NULL) {
 		SerializerDataConverter* converter = findConverter(finalType);
 		if(converter == NULL) {
 			throw NoSerializeConverterFoundException("Unable to deserialize type " + finalType + ".");
@@ -119,7 +103,7 @@ void Serializer::deserializeFromText(std::stringstream& input, const std::string
 			output = (void*)*(void**)output;
 		}
 
-		converter->convertToText(input, output);
+		converter->convertFromText(input, output);
 		return;
 	}
 
@@ -151,15 +135,15 @@ void Serializer::deserializeFromText(std::stringstream& input, const std::string
 
 		SerializerDataConverter* converter = findConverter(member->getTypeIdName());
 		if(converter == NULL) {
-			deserializeFromText(input, member->getType(), currentDataSection);
+			deserializeFromText(input, member->getTypeIdName(), currentDataSection);
 		}
 		else {
-			converter->convertToText(input, currentDataSection);
+			converter->convertFromText(input, currentDataSection);
 		}
 	}
 }
 
-void Serializer::serializeToXML(const std::string& name, const std::string& type, const std::string& typeIdName, void* data, rapidxml::xml_node<>* root)
+void Serializer::serializeToXML(const std::string& type, void* data, rapidxml::xml_node<>* root)
 {
 	rapidxml::xml_document<> tmpDoc;
 	rapidxml::xml_document<>& doc = root == NULL ? tmpDoc : *root->document();
@@ -174,31 +158,28 @@ void Serializer::serializeToXML(const std::string& name, const std::string& type
 	}
 
 	std::string finalType = type;
-
-	ReflectionClass* reflectionClass = Reflection::getInstance().getClassByTypeId(typeIdName);
-	if(reflectionClass == NULL)
-	{
-		reflectionClass = Reflection::getInstance().getClass(finalType);
+	bool isPointer = isTypeAPointer(finalType);
+	if(isPointer) {
+		data = (void*)*(void**)data;
+		if(data == NULL) {
+			root->append_attribute(doc.allocate_attribute(doc.allocate_string("i:isnull"), doc.allocate_string("true")));
+			root->append_attribute(doc.allocate_attribute(doc.allocate_string("xmlns:i"), doc.allocate_string("xmlserializer")));
+			return;
+		}
 	}
 
+	ReflectionClass* reflectionClass = Reflection::getInstance().getClassByTypeId(finalType);
 	if(reflectionClass == NULL)
 	{
 		SerializerDataConverter* converter = findConverter(finalType);
 		if(converter == NULL)
 		{
-			converter = findConverter(typeIdName);
-		}
-
-		if(converter == NULL)
-		{
 			throw NoSerializeConverterFoundException("Unable to serialize type " + finalType + ".");
 		}
-		converter->convertFromXML(data, false, name, *root);
+		converter->convertToXML(data, false, *root);
 		return;
 	}
 
-	rapidxml::xml_node<>* thisNode = doc.allocate_node(rapidxml::node_element, doc.allocate_string(name.c_str()));
-	root->append_node(thisNode);
 
 	const std::vector<ReflectionMember*>& memberVars = reflectionClass->getMemberVars();
 	for(unsigned int i = 0; i < memberVars.size(); ++i)
@@ -206,35 +187,40 @@ void Serializer::serializeToXML(const std::string& name, const std::string& type
 		ReflectionMember* member = memberVars[i];
 		void* currentDataSection = (void*)(((char*)data) + member->getOffset());
 
+
+		rapidxml::xml_node<>* thisNode = doc.allocate_node(rapidxml::node_element, doc.allocate_string(member->getName().c_str()));
+		root->append_node(thisNode);
+
 		SerializerDataConverter* converter = findConverter(member->getTypeIdName());
 		if(converter == NULL)
 		{
-			serializeToXML(member->getName(), member->getType(), member->getTypeIdName(), currentDataSection, thisNode);
+			serializeToXML(member->getTypeIdName(), currentDataSection, thisNode);
 		}
 		else
 		{
-			converter->convertFromXML(currentDataSection, false, member->getName(), *thisNode);
+			converter->convertToXML(currentDataSection, false, *thisNode);
 		}
 	}
 }
 
-void Serializer::deserializeFromXML(const std::string& name, const std::string& type, rapidxml::xml_node<>* root, void* output)
+void Serializer::deserializeFromXML(const std::string& type, rapidxml::xml_node<>* root, void* output)
 {
 	std::string finalType = type;
-
-	bool isPointer = false;
-	if(finalType[finalType.size()-1] == '*')
-	{
-		isPointer = true;
-		finalType.resize(finalType.size() - 1);
+	bool isPointer = isTypeAPointer(finalType);
+	if(isPointer) {
+		rapidxml::xml_attribute<>* isNull = root->first_attribute("i:isnull");
+		if(isNull) {
+			if(std::string(isNull->value(), isNull->value_size()) == "true") {
+				void** a = (void**)output;
+				void* b = NULL;
+				*a = b;
+				return;
+			}
+		}
 	}
+
 
 	ReflectionClass* reflectionClass = Reflection::getInstance().getClassByTypeId(finalType);
-	if(reflectionClass == NULL)
-	{
-		reflectionClass = Reflection::getInstance().getClass(finalType);
-	}
-
 	if(reflectionClass == NULL)
 	{
 		SerializerDataConverter* converter = findConverter(finalType);
@@ -251,7 +237,7 @@ void Serializer::deserializeFromXML(const std::string& name, const std::string& 
 			output = (void*)*(void**)output;
 		}
 
-		converter->convertToXML(output, false, name.c_str(), *root);
+		converter->convertFromXML(output, false, *root);
 		return;
 	}
 
@@ -275,22 +261,41 @@ void Serializer::deserializeFromXML(const std::string& name, const std::string& 
 		output = (void*)*(void**)output;
 	}
 
-	rapidxml::xml_node<>* thisNode = root->first_node(name.c_str());
-
 	const std::vector<ReflectionMember*>& memberVars = reflectionClass->getMemberVars();
 	for(unsigned int i = 0; i < memberVars.size(); ++i)
 	{
 		ReflectionMember* member = memberVars[i];
 		void* currentDataSection = (void*)(((char*)output) + member->getOffset());
 
+		rapidxml::xml_node<>* thisNode = root->first_node(member->getName().c_str());
+		if(!thisNode) {
+			throw SerializationXmlNodeNotFoundException("The node \""+member->getName()+"\" was not found");
+		}
+
 		SerializerDataConverter* converter = findConverter(member->getTypeIdName());
 		if(converter == NULL)
 		{
-			deserializeFromXML(member->getName(), member->getTypeIdName(), thisNode, currentDataSection);
+			deserializeFromXML(member->getTypeIdName(), thisNode, currentDataSection);
 		}
 		else
 		{
-			converter->convertToXML(currentDataSection, false, member->getName(), *thisNode);
+			converter->convertFromXML(currentDataSection, false, *thisNode);
 		}
 	}
+}
+
+bool Serializer::isTypeAPointer(std::string& finalType) {
+#ifdef MSVC
+	if(finalType[finalType.size()-1] == '*')  {
+		finalType.resize(finalType.size() - 1);
+#elif __GNUG__
+	if(finalType[0] == 'P')  {
+		finalType.erase(finalType.begin());
+#else
+	if(1==2) {
+#endif
+		return true;
+	}
+
+	return false;
 }

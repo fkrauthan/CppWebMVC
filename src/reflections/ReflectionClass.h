@@ -24,11 +24,12 @@ class ReflectionClass {
 		};
 
 	public:
-		ReflectionClass(const std::string& name, const std::string& typeIdName, const std::vector<std::string>& superClasses, const std::vector<ReflectionCTor*>& ctors, const std::vector<ReflectionFunction*>& functions, std::vector<ReflectionMember*> vars, ClassType classType);
+		ReflectionClass(const std::string& name, const std::string& typeIdName, const std::string& pointerTypeIdName, const std::vector<std::string>& superClasses, const std::vector<ReflectionCTor*>& ctors, const std::vector<ReflectionFunction*>& functions, std::vector<ReflectionMember*> vars, ClassType classType);
 		~ReflectionClass();
 
 		std::string& getName();
 		std::string& getTypeIdName();
+		std::string& getPointerTypeIdName();
 		std::vector<std::string>& getSuperClasses();
 
 		std::vector<ReflectionCTor*>& getCTors();
@@ -43,6 +44,7 @@ class ReflectionClass {
 	private:
 		std::string mName;
 		std::string mTypeIdName;
+		std::string mPointerTypeIdName;
 		std::vector<std::string> mSuperClasses;
 		std::vector<ReflectionCTor*> mCTors;
 		std::vector<ReflectionFunction*> mMemberFunctions;

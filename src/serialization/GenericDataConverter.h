@@ -16,20 +16,20 @@ template <typename T> class GenericDataConverter : public SerializerDataConverte
 		return typeid(T).name() == type;
 	}
 
-	virtual std::string convertFromText(void* input) {
+	virtual std::string convertToText(void* input) {
 		T realInput = *(T*)input;
 		std::stringstream result;
 		result << realInput;
 		return result.str();
 	}
 
-	virtual void convertToText(std::stringstream& input, void* destination) {
+	virtual void convertFromText(std::stringstream& input, void* destination) {
 		T result;
 		input >> result;
 		*((T*)destination) = result;
 	}
 
-	virtual void convertFromXML(void* input, bool asAttribute, const std::string& name, rapidxml::xml_node<>& root)
+	virtual void convertToXML(void* input, bool asAttribute, rapidxml::xml_node<>& root)
 	{
 		T realInput = *(T*)input;
 		std::stringstream result;
@@ -40,28 +40,27 @@ template <typename T> class GenericDataConverter : public SerializerDataConverte
 
 		if (!asAttribute)
 		{
-			rapidxml::xml_node<>* node = doc->allocate_node(rapidxml::node_element, doc->allocate_string(name.c_str()), doc->allocate_string(content.c_str()));
-			root.append_node(node);
+			rapidxml::xml_node<>* node = (rapidxml::xml_node<>*)&root;
+			node->value(doc->allocate_string(content.c_str()));
 		}
 		else
-			root.append_attribute(doc->allocate_attribute(doc->allocate_string(name.c_str()), doc->allocate_string(content.c_str())));
+		{
+			rapidxml::xml_attribute<>* attribute = (rapidxml::xml_attribute<>*)&root;
+			attribute->value(doc->allocate_string(content.c_str()));
+		}
 	}
 
-	virtual void convertToXML(void* output, bool fromAttribute, const std::string& name, rapidxml::xml_node<>& root)
+	virtual void convertFromXML(void* output, bool fromAttribute, rapidxml::xml_node<>& root)
 	{
 		std::stringstream stream;
 		if (!fromAttribute)
 		{
-			rapidxml::xml_node<>* node = name.empty() ? &root : root.first_node(name.c_str());
-			if (node == NULL)
-				return;
+			rapidxml::xml_node<>* node = (rapidxml::xml_node<>*)&root;
 			stream << std::string(node->value(), node->value_size());
 		}
 		else
 		{
-			rapidxml::xml_attribute<> * attribute = root.first_attribute(name.c_str());
-			if (attribute == NULL)
-				return;
+			rapidxml::xml_attribute<>* attribute = (rapidxml::xml_attribute<>*)&root;
 			stream << std::string(attribute->value(), attribute->value_size());
 		}
 

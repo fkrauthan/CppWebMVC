@@ -8,9 +8,10 @@
 #include "ReflectionClass.h"
 #include <iostream>
 
-ReflectionClass::ReflectionClass(const std::string& name, const std::string& typeIdName, const std::vector<std::string>& superClasses, const std::vector<ReflectionCTor*>& ctors, const std::vector<ReflectionFunction*>& functions, std::vector<ReflectionMember*> vars, ClassType classType) {
+ReflectionClass::ReflectionClass(const std::string& name, const std::string& typeIdName, const std::string& pointerTypeIdName, const std::vector<std::string>& superClasses, const std::vector<ReflectionCTor*>& ctors, const std::vector<ReflectionFunction*>& functions, std::vector<ReflectionMember*> vars, ClassType classType) {
 	mName = name;
 	mTypeIdName = typeIdName;
+	mPointerTypeIdName = pointerTypeIdName;
 	mSuperClasses = superClasses;
 	mCTors = ctors;
 	mMemberFunctions = functions;
@@ -38,6 +39,10 @@ std::string& ReflectionClass::getName() {
 
 std::string& ReflectionClass::getTypeIdName() {
 	return mTypeIdName;
+}
+
+std::string& ReflectionClass::getPointerTypeIdName() {
+	return mPointerTypeIdName;
 }
 
 std::vector<std::string>& ReflectionClass::getSuperClasses() {

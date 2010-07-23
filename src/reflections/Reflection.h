@@ -22,7 +22,7 @@ class Reflection {
 		ReflectionClass* getClass(const std::string& name);
 		template <typename T> ReflectionClass* getClass();
 
-		ReflectionClass* getClassByTypeId(const std::string& typeId);
+		ReflectionClass* getClassByTypeId(const std::string& typeId, bool* pointer=NULL);
 
 	public:
 		static Reflection& getInstance();
@@ -30,6 +30,7 @@ class Reflection {
 	private:
 		std::map<std::string, ReflectionClass*> mRegisteredClasses;
 		std::map<std::string, ReflectionClass*> mRegisteredClassesByTypeId;
+		std::map<std::string, ReflectionClass*> mRegisteredClassesByPointerTypeId;
 };
 
 
