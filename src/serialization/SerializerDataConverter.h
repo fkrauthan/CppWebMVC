@@ -15,6 +15,7 @@
 
 class SerializerDataConverter {
 	public:
+		virtual std::string getMatchingType() = 0;
 		virtual bool isMatchingConverter(const std::string& type) = 0;
 
 		virtual std::string convertToText(void* input) = 0;

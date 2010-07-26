@@ -16,17 +16,21 @@ Serializer& Serializer::getInstance() {
 }
 
 SerializerDataConverter* Serializer::findConverter(const std::string& type) {
-	for(unsigned int i = 0; i < mDataConverters.size(); ++i) {
-		if(mDataConverters[i]->isMatchingConverter(type)) {
-			return mDataConverters[i];
-		}
+	std::map<std::string, SerializerDataConverter*>::iterator iter = mDataConverters.find(type);
+	if(iter==mDataConverters.end()) {
+		return NULL;
 	}
 
-	return NULL;
+	return iter->second;
 }
 
 void Serializer::registerDataConverter(SerializerDataConverter* dataConverter) {
-	mDataConverters.push_back(dataConverter);
+	if(!findConverter(dataConverter->getMatchingType())) {
+		mDataConverters[dataConverter->getMatchingType()] = dataConverter;
+	}
+	else {
+		delete dataConverter;
+	}
 }
 
 std::string Serializer::serializeToText(const std::string& type, void* data) {

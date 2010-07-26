@@ -10,7 +10,8 @@
 
 #include "SerializerDataConverter.h"
 #include "../xml/rapidxml.hpp"
-#include <vector>
+#include <map>
+#include <string>
 
 
 class Serializer {
@@ -49,7 +50,7 @@ class Serializer {
 		bool isTypeAPointer(std::string& finalType);
 
 	private:
-		std::vector<SerializerDataConverter*> mDataConverters;
+		std::map<std::string, SerializerDataConverter*> mDataConverters;
 };
 
 
