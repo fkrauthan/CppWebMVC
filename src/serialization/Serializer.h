@@ -9,7 +9,7 @@
 #define SERIALIZER_H_
 
 #include "SerializerDataConverter.h"
-#include "../xml/rapidxml.hpp"
+#include <rapidxml/rapidxml.hpp>
 #include <map>
 #include <string>
 

@@ -26,6 +26,7 @@
 <option id="gnu.cpp.compiler.exe.debug.option.debugging.level.1091601576" name="Debug Level" superClass="gnu.cpp.compiler.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 <option id="gnu.cpp.compiler.option.include.paths.1066494035" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/Fkr_CppWebMVC/src}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Fkr_CppWebMVC/external}&quot;"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.625772790" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 </tool>
@@ -498,6 +499,7 @@
 <option id="gnu.cpp.compiler.exe.release.option.debugging.level.942201198" name="Debug Level" superClass="gnu.cpp.compiler.exe.release.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 <option id="gnu.cpp.compiler.option.include.paths.1515296418" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/Fkr_CppWebMVC/src}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Fkr_CppWebMVC/external}&quot;"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1727237996" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 </tool>

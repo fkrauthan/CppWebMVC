@@ -10,7 +10,7 @@
 
 #include <string>
 #include <sstream>
-#include "../xml/rapidxml.hpp"
+#include <rapidxml/rapidxml.hpp>
 
 
 class SerializerDataConverter {

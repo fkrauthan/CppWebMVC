@@ -7,7 +7,7 @@
 
 #include "Server.h"
 #include <webmvc/exceptions/ConfigReadException.h>
-#include <xml/rapidxml.hpp>
+#include <rapidxml/rapidxml.hpp>
 #include <boost/bind.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>

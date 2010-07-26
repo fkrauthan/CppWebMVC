@@ -8,7 +8,7 @@
 #ifndef BEANFACTORY_H_
 #define BEANFACTORY_H_
 
-#include <xml/rapidxml.hpp>
+#include <rapidxml/rapidxml.hpp>
 #include <boost/any.hpp>
 #include "BeanDef.h"
 #include <map>

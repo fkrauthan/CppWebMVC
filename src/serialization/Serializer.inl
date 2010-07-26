@@ -1,6 +1,6 @@
 
 #include <typeinfo>
-#include "../xml/rapidxml_print.hpp"
+#include <rapidxml/rapidxml_print.hpp>
 #include "SerializationXmlNodeNotFoundException.h"
 
 
