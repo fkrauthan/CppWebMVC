@@ -16,5 +16,5 @@ ClearSilverDefaultViewManager::~ClearSilverDefaultViewManager() {
 }
 
 View* ClearSilverDefaultViewManager::createView(const std::string& name) {
-	return new ClearSilverView();
+	return new ClearSilverView(name);
 }

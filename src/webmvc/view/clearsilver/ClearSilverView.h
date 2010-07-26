@@ -9,12 +9,18 @@
 #define CLEARSILVERVIEW_H_
 
 #include "../../modelandview/View.h"
+#include <string>
+
+
 class ClearSilverView : public View {
 	public:
-		ClearSilverView();
+		ClearSilverView(const std::string& templateFile);
 		~ClearSilverView();
 
 		void renderView(const HttpRequest& request, HttpResponse& response, const std::map<std::string, boost::any>& model);
+
+	private:
+		std::string mTemplateFile;
 };
 
 #endif /* CLEARSILVERVIEW_H_ */

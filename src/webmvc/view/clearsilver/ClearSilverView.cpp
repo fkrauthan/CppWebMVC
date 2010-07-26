@@ -8,8 +8,12 @@
 #include "ClearSilverView.h"
 
 
-ClearSilverView::ClearSilverView() {
+ClearSilverView::ClearSilverView(const std::string& templateFile) : mTemplateFile(templateFile) {
 }
 
 ClearSilverView::~ClearSilverView() {
+}
+
+void ClearSilverView::renderView(const HttpRequest& request, HttpResponse& response, const std::map<std::string, boost::any>& model) {
+
 }
