@@ -21,7 +21,7 @@
 
 using namespace rapidxml;
 
-static mg_error_t ServerSiteRequestHandler(struct mg_connection* conn, const struct mg_request_info* request_info);
+static void* ServerSiteRequestHandler(enum mg_event event, struct mg_connection* conn, const struct mg_request_info* request_info);
 static void ServerSignalhandler(int sig_num);
 
 
@@ -87,15 +87,16 @@ void Server::runServer(BeanFactory* factory) {
         signal(SIGCHLD, &ServerSignalhandler);
 #endif
 
-
-	mCtx = mg_start();
-	if(mServerSettings.sslCert!="") {
-		mg_set_option(mCtx, "ssl_cert", mServerSettings.sslCert.c_str());
+	static const char* options[] = {
+		"listening_ports", mServerSettings.ports.c_str(),
+		NULL, NULL,
+		NULL
+	};
+	if(!mServerSettings.sslCert.empty()) {
+		options[1] = "ssl_certificate";
+		options[2] = mServerSettings.sslCert.c_str();
 	}
-	mg_set_option(mCtx, "ports", mServerSettings.ports.c_str());
-
-	//Set URI handler
-	mg_set_callback(mCtx, MG_EVENT_NEW_REQUEST, &ServerSiteRequestHandler);
+	mCtx = mg_start(&ServerSiteRequestHandler, options);
 
 	std::cout << "Press ENTER to exit server!!!" << std::endl;
 	(void)getchar();
@@ -214,10 +215,15 @@ Server& Server::getInstance() {
 }
 
 
-static mg_error_t ServerSiteRequestHandler(struct mg_connection* conn, const struct mg_request_info* request_info) {
-	Server::getInstance().siteRequest(conn, request_info);
+static void* ServerSiteRequestHandler(enum mg_event event, struct mg_connection* conn, const struct mg_request_info* request_info) {
+	if(event == MG_NEW_REQUEST) {
+		Server::getInstance().siteRequest(conn, request_info);
+	}
+	else {
+		return NULL;
+	}
 
-	return MG_SUCCESS;
+	return conn;
 }
 
 static void ServerSignalhandler(int sig_num) {
