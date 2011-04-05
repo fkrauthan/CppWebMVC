@@ -34,6 +34,6 @@ class Reflection {
 };
 
 
-#include "Reflection.h"
+#include "Reflection.inl"
 
 #endif /* REFLECTION_H_ */

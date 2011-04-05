@@ -7,7 +7,7 @@
 
 #include "Serializer.h"
 #include "NoSerializeConverterFoundException.h"
-#include "../reflections/Reflection.h"
+#include <reflectionlib/Reflection.h>
 
 
 Serializer& Serializer::getInstance() {
@@ -16,21 +16,17 @@ Serializer& Serializer::getInstance() {
 }
 
 SerializerDataConverter* Serializer::findConverter(const std::string& type) {
-	std::map<std::string, SerializerDataConverter*>::iterator iter = mDataConverters.find(type);
-	if(iter==mDataConverters.end()) {
-		return NULL;
+	for(unsigned int i = 0; i < mDataConverters.size(); ++i) {
+		if(mDataConverters[i]->isMatchingConverter(type)) {
+			return mDataConverters[i];
+		}
 	}
 
-	return iter->second;
+	return NULL;
 }
 
 void Serializer::registerDataConverter(SerializerDataConverter* dataConverter) {
-	if(!findConverter(dataConverter->getMatchingType())) {
-		mDataConverters[dataConverter->getMatchingType()] = dataConverter;
-	}
-	else {
-		delete dataConverter;
-	}
+	mDataConverters.push_back(dataConverter);
 }
 
 std::string Serializer::serializeToText(const std::string& type, void* data) {

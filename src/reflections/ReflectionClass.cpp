@@ -8,7 +8,7 @@
 #include "ReflectionClass.h"
 #include <iostream>
 
-ReflectionClass::ReflectionClass(const std::string& name, const std::string& typeIdName, const std::string& pointerTypeIdName, const std::vector<std::string>& superClasses, const std::vector<ReflectionCTor*>& ctors, const std::vector<ReflectionFunction*>& functions, std::vector<ReflectionMember*> vars, ClassType classType) {
+ReflectionClass::ReflectionClass(const std::string& name, const std::string& typeIdName, const std::string& pointerTypeIdName, const std::vector<std::string>& superClasses, const std::vector<ReflectionCTor*>& ctors, const std::vector<ReflectionFunction*>& functions, std::vector<ReflectionMember*> vars, ClassType classType, const std::map<std::string, ReflectionAnotation*>& anotations) {
 	mName = name;
 	mTypeIdName = typeIdName;
 	mPointerTypeIdName = pointerTypeIdName;
@@ -17,6 +17,7 @@ ReflectionClass::ReflectionClass(const std::string& name, const std::string& typ
 	mMemberFunctions = functions;
 	mMemberVars = vars;
 	mClassType = classType;
+	mAnotations = anotations;
 
 	for(unsigned int i=0; i<mMemberFunctions.size(); i++) {
 		mSortedMemberFunctions[mMemberFunctions[i]->getName()].push_back(mMemberFunctions[i]);
@@ -30,6 +31,11 @@ ReflectionClass::~ReflectionClass() {
 
 	for(unsigned int i=0; i<mMemberVars.size(); i++) {
 		delete mMemberVars[i];
+	}
+
+	std::map<std::string, ReflectionAnotation*>::iterator iter;
+	for(iter=mAnotations.begin(); iter!=mAnotations.end(); ++iter) {
+		delete iter->second;
 	}
 }
 
@@ -82,4 +88,17 @@ ReflectionMember* ReflectionClass::getMemberVar(const std::string& name) {
 
 ReflectionClass::ClassType ReflectionClass::getClassType() {
 	return mClassType;
+}
+
+const std::map<std::string, ReflectionAnotation*>& ReflectionClass::getAnotations() {
+	return mAnotations;
+}
+
+ReflectionAnotation* ReflectionClass::getAnotation(const std::string& name) {
+	std::map<std::string, ReflectionAnotation*>::iterator iter = mAnotations.find(name);
+	if(iter==mAnotations.end()) {
+		return NULL;
+	}
+
+	return iter->second;
 }

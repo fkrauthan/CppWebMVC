@@ -11,6 +11,7 @@
 #include "ReflectionMember.h"
 #include "ReflectionFunction.h"
 #include "ReflectionCTor.h"
+#include "ReflectionAnotation.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -24,7 +25,7 @@ class ReflectionClass {
 		};
 
 	public:
-		ReflectionClass(const std::string& name, const std::string& typeIdName, const std::string& pointerTypeIdName, const std::vector<std::string>& superClasses, const std::vector<ReflectionCTor*>& ctors, const std::vector<ReflectionFunction*>& functions, std::vector<ReflectionMember*> vars, ClassType classType);
+		ReflectionClass(const std::string& name, const std::string& typeIdName, const std::string& pointerTypeIdName, const std::vector<std::string>& superClasses, const std::vector<ReflectionCTor*>& ctors, const std::vector<ReflectionFunction*>& functions, std::vector<ReflectionMember*> vars, ClassType classType, const std::map<std::string, ReflectionAnotation*>& anotations);
 		~ReflectionClass();
 
 		std::string& getName();
@@ -41,6 +42,10 @@ class ReflectionClass {
 		ReflectionMember* getMemberVar(const std::string& name);
 
 		ClassType getClassType();
+
+		const std::map<std::string, ReflectionAnotation*>& getAnotations();
+		ReflectionAnotation* getAnotation(const std::string& name);
+
 	private:
 		std::string mName;
 		std::string mTypeIdName;
@@ -50,6 +55,8 @@ class ReflectionClass {
 		std::vector<ReflectionFunction*> mMemberFunctions;
 		std::vector<ReflectionMember*> mMemberVars;
 		std::map<std::string, std::vector<ReflectionFunction*> > mSortedMemberFunctions;
+
+		std::map<std::string, ReflectionAnotation*> mAnotations;
 
 		ClassType mClassType;
 };

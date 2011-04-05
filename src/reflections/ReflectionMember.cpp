@@ -8,14 +8,19 @@
 #include "ReflectionMember.h"
 
 
-ReflectionMember::ReflectionMember(const std::string& name, const std::string& typeIdName, const std::string& type, int offset) {
+ReflectionMember::ReflectionMember(const std::string& name, const std::string& typeIdName, const std::string& type, int offset, const std::map<std::string, ReflectionAnotation*>& anotations) {
 	mName = name;
 	mTypeIdName = typeIdName;
 	mType = type;
 	mOffset = offset;
+	mAnotations = anotations;
 }
 
 ReflectionMember::~ReflectionMember() {
+	std::map<std::string, ReflectionAnotation*>::iterator iter;
+	for(iter=mAnotations.begin(); iter!=mAnotations.end(); ++iter) {
+		delete iter->second;
+	}
 }
 
 std::string& ReflectionMember::getName() {
@@ -32,4 +37,17 @@ std::string& ReflectionMember::getType() {
 
 int ReflectionMember::getOffset() {
 	return mOffset;
+}
+
+const std::map<std::string, ReflectionAnotation*>& ReflectionMember::getAnotations() {
+	return mAnotations;
+}
+
+ReflectionAnotation* ReflectionMember::getAnotation(const std::string& name) {
+	std::map<std::string, ReflectionAnotation*>::iterator iter = mAnotations.find(name);
+	if(iter==mAnotations.end()) {
+		return NULL;
+	}
+
+	return iter->second;
 }

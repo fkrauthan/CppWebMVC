@@ -8,16 +8,22 @@
 #include "ReflectionFunction.h"
 
 
-ReflectionFunction::ReflectionFunction(const std::string& name, const std::string& retType, const std::vector<ReflectionParam*>& params, boost::any (*invokeFunction)(void*, const std::vector<boost::any>&)) {
+ReflectionFunction::ReflectionFunction(const std::string& name, const std::string& retType, const std::vector<ReflectionParam*>& params, boost::any (*invokeFunction)(void*, const std::vector<boost::any>&), const std::map<std::string, ReflectionAnotation*>& anotations) {
 	mName = name;
 	mRetType = retType;
 	mParams = params;
 	mInvoke = invokeFunction;
+	mAnotations = anotations;
 }
 
 ReflectionFunction::~ReflectionFunction() {
 	for(unsigned int i = 0; i<mParams.size(); i++) {
 		delete mParams[i];
+	}
+
+	std::map<std::string, ReflectionAnotation*>::iterator iter;
+	for(iter=mAnotations.begin(); iter!=mAnotations.end(); ++iter) {
+		delete iter->second;
 	}
 }
 
@@ -35,4 +41,17 @@ std::vector<ReflectionParam*>& ReflectionFunction::getParams() {
 
 void ReflectionFunction::invoke(void* instance, const std::vector<boost::any>& params) {
 	mInvoke(instance, params);
+}
+
+const std::map<std::string, ReflectionAnotation*>& ReflectionFunction::getAnotations() {
+	return mAnotations;
+}
+
+ReflectionAnotation* ReflectionFunction::getAnotation(const std::string& name) {
+	std::map<std::string, ReflectionAnotation*>::iterator iter = mAnotations.find(name);
+	if(iter==mAnotations.end()) {
+		return NULL;
+	}
+
+	return iter->second;
 }

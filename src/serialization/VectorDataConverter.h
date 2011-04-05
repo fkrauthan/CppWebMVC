@@ -15,10 +15,6 @@
 
 
 template <typename T> class VectorDataConverter : public SerializerDataConverter {
-	virtual std::string getMatchingType() {
-		return typeid(std::vector<T>).name();
-	}
-
 	virtual bool isMatchingConverter(const std::string& type) {
 		return typeid(std::vector<T>).name() == type;
 	}

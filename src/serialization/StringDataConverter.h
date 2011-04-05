@@ -12,10 +12,6 @@
 
 
 class StringDataConverter : public SerializerDataConverter {
-	virtual std::string getMatchingType() {
-		return typeid(std::string).name();
-	}
-
 	virtual bool isMatchingConverter(const std::string& type) {
 		return typeid(std::string).name() == type;
 	}

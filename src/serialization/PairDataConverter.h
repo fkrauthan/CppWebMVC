@@ -15,10 +15,6 @@
 
 
 template <typename T, typename U> class PairDataConverter : public SerializerDataConverter {
-	virtual std::string getMatchingType() {
-		return typeid(std::pair<T, U>).name();
-	}
-
 	virtual bool isMatchingConverter(const std::string& type) {
 		return typeid(std::pair<T, U>).name() == type;
 	}

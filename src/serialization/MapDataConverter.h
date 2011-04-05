@@ -15,10 +15,6 @@
 
 
 template <typename T, typename U> class MapDataConverter : public SerializerDataConverter {
-	virtual std::string getMatchingType() {
-		return typeid(std::map<T, U>).name();
-	}
-
 	virtual bool isMatchingConverter(const std::string& type) {
 		return typeid(std::map<T, U>).name() == type;
 	}

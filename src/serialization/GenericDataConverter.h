@@ -12,10 +12,6 @@
 #include <iostream>
 
 template <typename T> class GenericDataConverter : public SerializerDataConverter {
-	virtual std::string getMatchingType() {
-		return typeid(T).name();
-	}
-
 	virtual bool isMatchingConverter(const std::string& type) {
 		return typeid(T).name() == type;
 	}
