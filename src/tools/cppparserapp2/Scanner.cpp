@@ -11,7 +11,7 @@
 
 
 Scanner::Scanner(const std::vector<std::string>& fileExtensions, bool generateSerialization, bool timecheck, const std::string& appPath)
-	: mFileExtensions(fileExtensions), mGenerateSerialization(generateSerialization), mTimecheck(timecheck), mAppChangeDate(boost::filesystem::last_write_time(appPath)) {
+	: mGenerateSerialization(generateSerialization), mTimecheck(timecheck), mFileExtensions(fileExtensions), mAppChangeDate(boost::filesystem::last_write_time(appPath)) {
 }
 
 Scanner::~Scanner() {
