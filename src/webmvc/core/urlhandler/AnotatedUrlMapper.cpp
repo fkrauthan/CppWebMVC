@@ -6,7 +6,7 @@
  */
 
 #include "AnotatedUrlMapper.h"
-#include <reflections/Reflection.h>
+#include <reflectionlib/Reflection.h>
 
 
 AnotatedUrlMapper::AnotatedUrlMapper(bool search) : mSearchForAntotatedClasses(search) {
@@ -63,8 +63,8 @@ bool AnotatedUrlMapper::dispatchUrl(const HttpRequest& request, HttpResponse& re
 			}
 
 			std::vector<boost::any> params;
-			params.push_back(request);
-			params.push_back(response);
+			params.push_back(&request);
+			params.push_back(&response);
 			return mMappingsWithRegex[i].second.second->invoke<bool>(mMappingsWithRegex[i].second.first, params);
 		}
 	}
