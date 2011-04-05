@@ -18,6 +18,14 @@ HttpResponse::HttpResponse(boost::function<void (const std::string&)> sendData) 
 	mStatus(SC_OK) {
 }
 
+HttpResponse::HttpResponse(const HttpResponse& response) :
+	mSendData(response.mSendData),
+	mHeaderSend(response.mHeaderSend),
+	mContentType(response.mContentType),
+	mStatus(response.mStatus) {
+
+}
+
 const HttpCookie& HttpResponse::getCookie(const std::string& name) const {
 	for(unsigned int i=0; i<mCookies.size(); i++) {
 		if(mCookies[i].getName() == name) {

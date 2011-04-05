@@ -26,6 +26,19 @@ HttpRequest::HttpRequest(const std::vector<HttpCookie>& cookies, const std::map<
 	mSession(NULL) {
 }
 
+HttpRequest::HttpRequest(const HttpRequest& request) :
+	mCookies(request.mCookies),
+	mHeaderFields(request.mHeaderFields),
+	mMethod(request.mMethod),
+	mClientInfo(request.mClientInfo),
+	mAttributes(request.mAttributes),
+	mUri(request.mUri),
+	mQuery(request.mQuery),
+	mApplication(request.mApplication),
+	mSession(request.mSession) {
+
+}
+
 const HttpCookie& HttpRequest::getCookie(const std::string& name) const {
 	for(unsigned int i=0; i<mCookies.size(); i++) {
 		if(mCookies[i].getName() == name) {

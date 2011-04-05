@@ -29,6 +29,8 @@ class HttpRequest {
 					const std::string& method, const HttpClientInfo& clientInfo, const std::map<std::string, std::string>& attributes,
 					const std::string& uri, const std::string& query);
 
+		HttpRequest(const HttpRequest& request);
+
 		const HttpCookie& getCookie(const std::string& name) const;
 		const std::vector<HttpCookie>& getCookies() const;
 		bool containsCookie(const std::string& name) const;

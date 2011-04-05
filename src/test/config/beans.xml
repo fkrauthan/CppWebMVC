@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
+	<!-- SimpleUrlMapper -->
     <bean id="testController" class="TestController" />
+    <!-- AnotatedUrlMapper -->
+<!--     <bean id="testController" class="TestController2" /> -->
 
     <bean id="mySessionManager" class="InMemorySessionManager">
     </bean>
@@ -10,19 +13,29 @@
         <property name="sessionManager" ref="mySessionManager" />
     </bean>
 
-    <bean id="urlHandler" class="SimpleUrlMapper">
-        <property name="mappings">
-            <map>
-                <item key="/test">testController</item>
-                <item key="/test2">testController</item>
-                <item key="/test3">testController</item>
-                <item key="/regexTest/.*">testController</item>
-                <item key="/view/(?<view>\d+)">testController</item>
+<!--     <bean id="urlHandler" class="SimpleUrlMapper"> -->
+<!--         <property name="mappings"> -->
+<!--             <map> -->
+<!--                 <item key="/test">testController</item> -->
+<!--                 <item key="/test2">testController</item> -->
+<!--                 <item key="/test3">testController</item> -->
+<!--                 <item key="/regexTest/.*">testController</item> -->
+<!--                 <item key="/view/(?<view>\d+)">testController</item> -->
                 
-                <item key="/session/info">testController</item>
-                <item key="/session/(?<action>set)/(?<key>.+)/(?<value>.+)">testController</item>
-                <item key="/session/(?<action>get)/(?<key>.+)">testController</item>
-            </map>
+<!--                 <item key="/session/info">testController</item> -->
+<!--                 <item key="/session/(?<action>set)/(?<key>.+)/(?<value>.+)">testController</item> -->
+<!--                 <item key="/session/(?<action>get)/(?<key>.+)">testController</item> -->
+<!--             </map> -->
+<!--         </property> -->
+<!--     </bean> -->
+	<bean id="urlHandler" class="AnotatedUrlMapper">
+		<!-- Search for antotated classes -->
+		<constructor-arg>0</constructor-arg>
+        
+        <property name="classes">
+            <list>
+                <item>testController</item>
+            </list>
         </property>
     </bean>
 </beans>

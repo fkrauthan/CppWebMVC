@@ -64,6 +64,7 @@ class HttpResponse {
 
 	public:
 		HttpResponse(boost::function<void (const std::string&)> sendData);
+		HttpResponse(const HttpResponse& response);
 
 		const HttpCookie& getCookie(const std::string& name) const;
 		const std::vector<HttpCookie>& getCookies() const;

@@ -31,7 +31,7 @@ void SimpleUrlMapper::setMappings(std::vector<std::pair<std::string, IBasicContr
 std::vector<std::pair<std::string, IBasicController*> >& SimpleUrlMapper::getMappings() {
 	return mMappings;
 }
-#include <iostream>
+
 bool SimpleUrlMapper::dispatchUrl(const HttpRequest& request, HttpResponse& response) {
 	//TODO run interceptors before
 
