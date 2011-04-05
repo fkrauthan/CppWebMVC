@@ -18,13 +18,13 @@ TestController2::~TestController2() {
 
 }
 
-ModelAndView TestController2::testFunction(const HttpRequest& request, HttpResponse& response) {
-	response << "Hello World";
-	if(request.containsCookie("TestCookie")) {
-		response << ": Cookie value=" << request.getCookie("TestCookie").getValue();
+ModelAndView TestController2::testFunction(HttpRequest* request, HttpResponse* response) {
+	*response << "Hello World";
+	if(request->containsCookie("TestCookie")) {
+		*response << ": Cookie value=" << request->getCookie("TestCookie").getValue();
 	}
-	if(request.hasAttribute("view")) {
-		response << "<br />View id is: " << request.getAttribute("view");
+	if(request->hasAttribute("view")) {
+		*response << "<br />View id is: " << request->getAttribute("view");
 	}
 
 	return ModelAndView();

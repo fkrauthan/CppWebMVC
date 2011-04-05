@@ -11,14 +11,13 @@
 #include <webmvc/controller/BasicController.h>
 
 
-class TestController2 : public BasicController {
+class TestController2 : public IObject {
 	public:
 		TestController2();
 		~TestController2();
 
-	protected:
 		// @Request (url="/text")
-		ModelAndView testFunction(const HttpRequest& request, HttpResponse& response);
+		ModelAndView testFunction(HttpRequest* request, HttpResponse* response);
 };
 
 #endif /* TESTCONTROLLER2_H_ */

@@ -11,6 +11,7 @@
 #include <webmvc/controller/BasicController.h>
 
 
+// @Ignore
 class TestController : public BasicController {
 	public:
 		TestController();
