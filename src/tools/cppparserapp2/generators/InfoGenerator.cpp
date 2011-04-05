@@ -30,6 +30,10 @@ void InfoGenerator::scan() {
 			hasDefaultCTor = true;
 		}
 
+		if(!shouldPrintFunction(mObject.mMethods[i])) {
+			continue;
+		}
+
 		if(mObject.mMethods[i].mQualifier == AnalyzerNS::Qualifier::Public) {
 			if(mObject.mMethods[i].mIsClassConstructor) {
 				genCTorInfo(i, mObject.mMethods[i]);
@@ -160,7 +164,7 @@ void InfoGenerator::genAnotationsInfo(const std::vector<AnalyzerNS::Annotation>&
 		mOut << "\t\tparamsMap.clear();\n";
 		std::map<std::string, std::string>::const_iterator iter;
 		for(iter=anotations[i].mParameters.begin(); iter!=anotations[i].mParameters.end(); ++iter) {
-			mOut << "\t\tparamsMap[\"" << iter->first << "\"] = \"" << iter->second << "\";";
+			mOut << "\t\tparamsMap[\"" << iter->first << "\"] = \"" << iter->second << "\";\n";
 		}
 		mOut << "\t\tanotationsHolder[\"" << anotations[i].mName << "\"] = new ReflectionAnotation(\"" << anotations[i].mName << "\", paramsMap);\n";
 	}
@@ -182,4 +186,14 @@ std::string InfoGenerator::buildReflectionType(const AnalyzerNS::TypeInfo& typeI
 		typeString.append("*");
 	}
 	return typeString;
+}
+
+bool InfoGenerator::shouldPrintFunction(const AnalyzerNS::MethodInfo& method) {
+	for(unsigned int i=0; i<method.mAnnotations.size(); i++) {
+		if(method.mAnnotations[i].mName == "Ignore") {
+			return false;
+		}
+	}
+
+	return true;
 }

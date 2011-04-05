@@ -26,6 +26,10 @@ void CallGenerator::scan() {
 			hasDefaultCTor = true;
 		}
 
+		if(!shouldPrintFunction(mMethodInfos[i])) {
+			continue;
+		}
+
 		if(mMethodInfos[i].mQualifier == AnalyzerNS::Qualifier::Public) {
 			if(mMethodInfos[i].mIsClassConstructor) {
 				genCTorCall(i, mMethodInfos[i]);
@@ -146,4 +150,14 @@ std::string CallGenerator::buildReflectionType(const AnalyzerNS::TypeInfo& typeI
 		typeString.append("*");
 	}
 	return typeString;
+}
+
+bool CallGenerator::shouldPrintFunction(const AnalyzerNS::MethodInfo& method) {
+	for(unsigned int i=0; i<method.mAnnotations.size(); i++) {
+		if(method.mAnnotations[i].mName == "Ignore") {
+			return false;
+		}
+	}
+
+	return true;
 }

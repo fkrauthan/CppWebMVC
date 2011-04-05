@@ -35,6 +35,8 @@ class InfoGenerator {
 
 		std::string buildReflectionType(const AnalyzerNS::TypeInfo& typeInfo);
 
+		bool shouldPrintFunction(const AnalyzerNS::MethodInfo& method);
+
 	private:
 		std::string mClassName;
 		std::string mNamespace;

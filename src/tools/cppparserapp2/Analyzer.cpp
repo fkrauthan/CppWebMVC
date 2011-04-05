@@ -250,6 +250,7 @@ namespace AnalyzerNS
 
 	std::string::size_type Analyzer::ParseObjects(const std::string& input, ObjectData* parent, Qualifier::Enumeration parentQualifier, std::string::size_type pos)
 	{
+		//FIXME: mAnnotations is the first time empty becouse there is a missing parseAnnotation!!!
 		ObjectData newClass;
 		newClass.mQualifier = parentQualifier;
 		newClass.mAnnotations = currentAnnotationsForNext;
@@ -525,6 +526,8 @@ namespace AnalyzerNS
 	MethodInfo Analyzer::ParseMethod(const std::string& input, Qualifier::Enumeration qualifier)
 	{
 		MethodInfo result;
+		result.mAnnotations = currentAnnotationsForNext;
+		currentAnnotationsForNext.clear();
 		result.mQualifier = qualifier;
 
 		std::string::size_type startPos = input.find("(");
@@ -602,8 +605,7 @@ namespace AnalyzerNS
 		if (pos == std::string::npos)
 			pos = buffer.size();
 
-		result.mName = buffer.substr(0, pos);
-
+		result.mName = trim(buffer.substr(0, pos));
 		if (pos != buffer.size())
 		{
 			std::string params = buffer.substr(pos + 1, buffer.size() - pos);
@@ -655,12 +657,8 @@ namespace AnalyzerNS
 		if (start == std::string::npos)
 			return false;
 
-		std::string::size_type end = input.find("\n", start);
-		if (end == std::string::npos)
-			end = input.size();
-
 		bool foundAnnotation = false;
-		for (unsigned int i = start + 2; i < end; ++i)
+		for (unsigned int i = start + 2; i < input.length(); ++i)
 		{
 			if (input[i] == '@')
 			{

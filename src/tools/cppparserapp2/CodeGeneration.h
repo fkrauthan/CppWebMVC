@@ -26,6 +26,7 @@ class CodeGeneration {
 		void scanObjectData(const AnalyzerNS::ObjectData& objectData);
 		void scanObject(const AnalyzerNS::ObjectData& objectData);
 
+		bool shouldPrintObject(const AnalyzerNS::ObjectData& objectData);
 	private:
 		const std::time_t& mLastAppChange;
 

@@ -36,6 +36,23 @@ void CodeGeneration::scan() {
 	AnalyzerNS::Analyzer analyzer;
 	analyzer.Analyze(mFile);
 	if(analyzer.MainObjects.size() > 0) {
+		//First check if there is a class that is not ignored
+		bool skipThisFile = true;
+		for(unsigned int i=0; i<analyzer.MainObjects.size(); i++) {
+			if(analyzer.MainObjects[i].mQualifier != AnalyzerNS::Qualifier::Public) {
+				continue;
+			}
+
+			if(shouldPrintObject(analyzer.MainObjects[i])) {
+				skipThisFile = false;
+				break;
+			}
+		}
+		if(skipThisFile) {
+			std::cout << "ignored" << std::endl;
+			return;
+		}
+
 		mOut.open(std::string(mFile+".rf2.cpp").c_str(), std::ios::out);
 		if(!mOut.is_open()) {
 			std::cout << "failed (Can't create output file)" << std::endl;
@@ -65,10 +82,6 @@ void CodeGeneration::scan() {
 }
 
 void CodeGeneration::scanObjectData(const AnalyzerNS::ObjectData& objectData) {
-	if(objectData.mQualifier != AnalyzerNS::Qualifier::Public) {
-		return;
-	}
-
 	if(objectData.mObjectType == AnalyzerNS::ObjectType::Namespace) {
 		mNamespace += objectData.mName+"::";
 		for(unsigned int i=0; i<objectData.mChildObjects.size(); i++) {
@@ -130,4 +143,14 @@ void CodeGeneration::writeHeader() {
 	}
 
 	mOut << "\n";
+}
+
+bool CodeGeneration::shouldPrintObject(const AnalyzerNS::ObjectData& objectData) {
+	for(unsigned int i=0; i<objectData.mAnnotations.size(); i++) {
+		if(objectData.mAnnotations[i].mName == "Ignore") {
+			return false;
+		}
+	}
+
+	return true;
 }
